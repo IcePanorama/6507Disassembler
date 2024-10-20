@@ -11,13 +11,19 @@ Instruction::Instruction (const std::string &asm_instruction, uint8_t opcode,
 {
 }
 
+std::string
+Instruction::to_string (void) const
+{
+  return std::format (
+      "{}\t[{:02X} | {}]\tSize in bytes/Num cycles: {:02X} / {:02X}",
+      this->asm_instruction_, this->opcode_,
+      addressing_mode_to_str (this->addr_mode_), this->length_,
+      this->num_cycles_);
+}
+
 std::ostream &
 operator<< (std::ostream &os, const Instruction &i)
 {
-  os << std::format (
-      "{}\t[{:02X} | {}]\tSize in bytes/Num cycles: {:02X} / {:02X}",
-      i.asm_instruction_, i.opcode_, addressing_mode_to_str (i.addr_mode_),
-      i.length_, i.num_cycles_);
-
+  os << i.to_string ();
   return os;
 }

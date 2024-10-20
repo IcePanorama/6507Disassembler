@@ -67,3 +67,14 @@ add_custom_target(full
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 add_dependencies(${PROJECT_NAME} format)
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCL_DIR})
+
+set_property(
+    TARGET 6507Disassembler
+    PROPERTY ADDITIONAL_CLEAN_FILES "${CMAKE_BINARY_DIR}/output.hexdump;"
+)
+
+#set_property(
+#        TARGET 6507Disassembler
+#        APPEND
+#        PROPERTY ADDITIONAL_CLEAN_FILES "${CMAKE_BINARY_DIR}/output.hexdump"
+#)

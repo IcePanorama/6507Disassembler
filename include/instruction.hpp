@@ -19,6 +19,7 @@ public:
   Instruction (const std::string &asm_instruction, uint8_t opcode,
                AddressingMode_e addr_mode, uint8_t length, uint8_t num_cycles);
 
+  std::string to_string (void) const;
   friend std::ostream &operator<< (std::ostream &os, const Instruction &i);
 };
 

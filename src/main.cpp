@@ -19,9 +19,16 @@ main (void)
   file.read (&b, sizeof (b));
   std::cout << std::format ("{:02X}\n", b);
 
+  std::ofstream output ("output.hexdump", std::ios::out);
+  if (!output)
+    exit (1);
+
   const auto &table = InstructionLookupTable::get_table ();
   if (table.find (b) != table.end ())
-    std::cout << table.at (b) << std::endl;
+    {
+      std::string line = table.at (b).to_string ();
+      output.write (line.c_str (), line.length ());
+    }
 
   return 0;
 }
