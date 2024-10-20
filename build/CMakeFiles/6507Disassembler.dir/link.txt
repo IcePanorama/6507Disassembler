@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/6507Disassembler.dir/src/main.cpp.o -o /home/main/Dev/C++/6507Disassembler/6507Disassembler 

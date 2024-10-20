@@ -1,8 +1,8 @@
 # Project specific
 6507Disassembler
-./build/*
-./cache/*
-./releases/*
+build/*
+cache/*
+releases/*
 *.json
 vgcore.*
 
