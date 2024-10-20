@@ -1,3 +1,5 @@
+#include "instruction_lookup.hpp"
+
 #include <format>
 #include <fstream>
 #include <iostream>
@@ -16,6 +18,10 @@ main (void)
   char b;
   file.read (&b, sizeof (b));
   std::cout << std::format ("{:02X}\n", b);
+
+  const auto &table = InstructionLookupTable::get_table ();
+  if (table.find (b) != table.end ())
+    std::cout << table.at (b) << std::endl;
 
   return 0;
 }

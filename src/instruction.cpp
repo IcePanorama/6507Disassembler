@@ -15,7 +15,7 @@ std::ostream &
 operator<< (std::ostream &os, const Instruction &i)
 {
   os << std::format (
-      "{}\t[{:02X}|{}]\tLen: {:02X} / {:02X} (size in bytes/num cycles)",
+      "{}\t[{:02X} | {}]\tSize in bytes/Num cycles: {:02X} / {:02X}",
       i.asm_instruction_, i.opcode_, addressing_mode_to_str (i.addr_mode_),
       i.length_, i.num_cycles_);
 
