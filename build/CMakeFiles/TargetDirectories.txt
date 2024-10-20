@@ -1,0 +1,6 @@
+/home/main/Dev/C++/6507Disassembler/build/CMakeFiles/format.dir
+/home/main/Dev/C++/6507Disassembler/build/CMakeFiles/test.dir
+/home/main/Dev/C++/6507Disassembler/build/CMakeFiles/full.dir
+/home/main/Dev/C++/6507Disassembler/build/CMakeFiles/6507Disassembler.dir
+/home/main/Dev/C++/6507Disassembler/build/CMakeFiles/edit_cache.dir
+/home/main/Dev/C++/6507Disassembler/build/CMakeFiles/rebuild_cache.dir
