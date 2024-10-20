@@ -27,10 +27,14 @@ set(CODE_STYLE GNU)
 
 set(INCL_DIR "${PROJECT_SOURCE_DIR}/include")
 set(INCL_FILES
+    "${INCL_DIR}/addressing_mode.hpp"
+    "${INCL_DIR}/instruction.hpp"
 )
 
 set(SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 set(SRC_FILES
+    "${SRC_DIR}/addressing_mode.cpp"
+    "${SRC_DIR}/instruction.cpp"
     "${SRC_DIR}/main.cpp"
 )
 
