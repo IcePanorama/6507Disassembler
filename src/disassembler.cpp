@@ -1,11 +1,15 @@
 #include "disassembler.hpp"
+#include "addressing_mode.hpp"
 #include "instruction_lookup.hpp"
 
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <format>
 #include <iostream>
+#include <ostream>
 #include <stdexcept>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -74,11 +78,26 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
       line.append ("\t\t");
     }
 
-  line.append (std::format ("{}", i.get_asm_instruction ()));
-
-  for (const uint8_t &arg : arguments)
-    line.append (std::format ("{:02X}", arg));
+  line.append (std::format ("{} ", i.get_asm_instruction ()));
+  line.append (this->format_arguments (i.get_addressing_mode (), arguments));
   line.append ("\n");
 
   output_fptr.write (line.c_str (), line.length ());
+}
+
+std::string
+Disassembler::format_arguments (const AddressingMode_e &am,
+                                const std::vector<uint8_t> &args)
+{
+  std::string output;
+  switch (am)
+    {
+    case AM_ABSOLUTE:
+      output += "$";
+      for (const auto &arg : args)
+        output += std::format ("{:02X}", arg);
+      return output;
+    default:
+      return "";
+    }
 }

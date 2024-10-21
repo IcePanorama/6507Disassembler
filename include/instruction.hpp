@@ -25,6 +25,7 @@ public:
   std::string get_asm_instruction (void) const;
   uint8_t get_opcode (void) const;
   uint8_t get_num_arguments (void) const;
+  AddressingMode_e get_addressing_mode (void) const;
 };
 
 #endif /* _6507_INSTRUCTION_HPP_ */

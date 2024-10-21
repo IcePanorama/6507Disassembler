@@ -46,3 +46,9 @@ Instruction::get_asm_instruction (void) const
 {
   return this->asm_instruction_;
 }
+
+AddressingMode_e
+Instruction::get_addressing_mode (void) const
+{
+  return this->addr_mode_;
+}
