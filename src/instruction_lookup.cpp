@@ -13,6 +13,7 @@ InstructionLookupTable::get_table (void)
     { 0xA2, Instruction ("LDX", 0xA2, AM_ABSOLUTE, 1, 2) },
     { 0xA8, Instruction ("TAY", 0xA8, AM_IMPLIED, 0, 2) },
     { 0xB5, Instruction ("LDA", 0xB5, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
+    { 0xB9, Instruction ("LDA", 0xB9, AM_ABSOLUTE_Y_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
     { 0xAD, Instruction ("LDA", 0xAD, AM_ABSOLUTE, 2, 4) },
   };
   return table;

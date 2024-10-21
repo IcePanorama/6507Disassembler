@@ -18,6 +18,8 @@ class Disassembler
   // std::string format_arguments (const std::vector<uint8_t>& args);
   std::string format_arguments (const AddressingMode_e &am,
                                 const std::vector<uint8_t> &args);
+  std::string
+  format_absolute_addr_arguments (const std::vector<uint8_t> &args);
 
 public:
   Disassembler (void) = default;
