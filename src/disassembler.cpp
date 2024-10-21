@@ -71,12 +71,10 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
     byte_string.append (std::format (" {:02X}", arg));
 
   std::string line = std::format (line_format, location, byte_string);
-  if (i.get_num_arguments () % 2 == 0)
+  if (i.get_num_arguments () != 0 && i.get_num_arguments () % 2 == 0)
     line.append ("\t");
   else
-    {
-      line.append ("\t\t");
-    }
+    line.append ("\t\t");
 
   line.append (std::format ("{} ", i.get_asm_instruction ()));
   line.append (this->format_arguments (i.get_addressing_mode (), arguments));
