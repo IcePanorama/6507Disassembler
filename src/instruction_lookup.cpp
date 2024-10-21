@@ -15,7 +15,7 @@ InstructionLookupTable::get_table (void)
     { 0x69, Instruction ("ADC", 0x69, AM_IMMEDIATE, 1, 2) },
     { 0x65, Instruction ("ADC", 0x65, AM_ZERO_PAGE, 1, 3) },
     { 0x7D, Instruction ("ADC", 0x7D, AM_ABSOLUTE_X_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
-    { 0x61, Instruction ("ADC", 0x61, AM_INDIRECT_X_INDEXED, 2, 6) },
+    { 0x61, Instruction ("ADC", 0x61, AM_INDIRECT_X_INDEXED, 1, 6) },
 
     /**
      *  AND (bitwise AND with accumulator). Affects Flags: N Z.
@@ -35,6 +35,7 @@ InstructionLookupTable::get_table (void)
      *  BIT (test BITs). Affects Flags: N V Z.
      *  @see: http://www.6502.org/tutorials/6502opcodes.html#BIT
      */
+    { 0x24, Instruction ("BIT", 0x24, AM_ZERO_PAGE, 1, 3) },
     { 0x2C, Instruction ("BIT", 0x2C, AM_ABSOLUTE, 2, 4) },
 
     /**
@@ -106,6 +107,18 @@ InstructionLookupTable::get_table (void)
      */
     { 0xE6, Instruction ("INC", 0xE6, AM_ZERO_PAGE, 1, 5) },
     { 0xF6, Instruction ("INC", 0xF6, AM_ZERO_PAGE_X_INDEXED, 1, 6) },
+
+    /**
+     *  JMP (JuMP). Affects Flags: none
+     *  @see: http://www.6502.org/tutorials/6502opcodes.html#JMP
+     */
+    { 0x4C, Instruction ("JMP", 0x4C, AM_ABSOLUTE, 2, 3) },
+
+    /**
+     *  JSR (Jump to SubRoutine). Affects Flags: none.
+     *  @see: http://www.6502.org/tutorials/6502opcodes.html#JSR
+     */
+    { 0x20, Instruction ("JSR", 0x20, AM_ABSOLUTE, 2, 6) },
 
     /**
      *  LSR (Logical Shift Right).
@@ -192,6 +205,13 @@ InstructionLookupTable::get_table (void)
     { 0x60, Instruction ("RTS", 0x60, AM_IMPLIED, 0, 6) },
 
     /**
+     *  STA (STore Accumulator). Affects Flags: none.
+     *  @see: http://www.6502.org/tutorials/6502opcodes.html#STA
+     */
+    { 0x85, Instruction ("STA", 0x85, AM_ZERO_PAGE, 1, 3) },
+    { 0x95, Instruction ("STA", 0x95, AM_ZERO_PAGE_X_INDEXED, 1, 3) },
+
+    /**
      *  SBC (SuBtract with Carry). Affects Flags: N V Z C.
      *  @see: http://www.6502.org/tutorials/6502opcodes.html#SBC
      */
@@ -218,14 +238,10 @@ InstructionLookupTable::get_table (void)
     { 0x86, Instruction ("STX", 0x86, AM_ZERO_PAGE, 1, 3) },
     { 0x8E, Instruction ("STX", 0x8E, AM_ABSOLUTE, 2, 4) },
 
-    { 0x24, Instruction ("BIT", 0x24, AM_ZERO_PAGE, 1, 3) },
-
-    { 0x4C, Instruction ("JMP", 0x4C, AM_ABSOLUTE, 2, 3) },
-    { 0x20, Instruction ("JSR", 0x20, AM_ABSOLUTE, 2, 6) },
-
-    { 0x85, Instruction ("STA", 0x85, AM_ZERO_PAGE, 1, 3) },
-    { 0x95, Instruction ("STA", 0x95, AM_ZERO_PAGE_X_INDEXED, 1, 3) },
-
+    /**
+     *  STY (STore Y register). Affects Flags: none.
+     *  @see: http://www.6502.org/tutorials/6502opcodes.html#STY
+     */
     { 0x84, Instruction ("STY", 0x84, AM_ZERO_PAGE, 1, 3) },
   };
   return table;
