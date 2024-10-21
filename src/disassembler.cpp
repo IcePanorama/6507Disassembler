@@ -97,6 +97,8 @@ Disassembler::format_arguments (const AddressingMode_e &am,
       for (const auto &arg : args)
         output += std::format ("{:02X}", arg);
       return output;
+    case AM_ZERO_PAGE_X_INDEXED:
+      return std::format ("${:02X},X", args.at (0));
     default:
       return "";
     }

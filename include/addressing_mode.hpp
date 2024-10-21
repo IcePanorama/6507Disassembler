@@ -6,6 +6,7 @@
 enum AddressingMode_e
 {
   AM_ABSOLUTE,
+  AM_ZERO_PAGE_X_INDEXED,
   AM_NUM_ADDRESSING_MODES
 };
 
