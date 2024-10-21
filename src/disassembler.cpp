@@ -55,7 +55,7 @@ void
 Disassembler::process_instruction (const Instruction &i, uint16_t location)
 {
   /* "[location]\t[raw instruction]\t[human-readable instruction]" */
-  static constexpr const char *line_format = "{:04X}\t{}\t{}";
+  static constexpr const char *line_format = "{:04X}\t{}";
 
   std::vector<uint8_t> arguments (i.get_num_arguments ());
   this->input_fptr.read (reinterpret_cast<char *> (arguments.data ()),
@@ -66,8 +66,16 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
   for (const uint8_t &arg : arguments)
     byte_string.append (std::format (" {:02X}", arg));
 
-  std::string line = std::format (line_format, location, byte_string,
-                                  i.get_asm_instruction ());
+  std::string line = std::format (line_format, location, byte_string);
+  if (i.get_num_arguments () % 2 == 0)
+    line.append ("\t");
+  else
+    {
+      line.append ("\t\t");
+    }
+
+  line.append (std::format ("{}", i.get_asm_instruction ()));
+
   for (const uint8_t &arg : arguments)
     line.append (std::format ("{:02X}", arg));
   line.append ("\n");
