@@ -90,10 +90,13 @@ Disassembler::format_arguments (const AddressingMode_e &am,
       return this->format_absolute_addr_arguments (args);
     case AM_ABSOLUTE_Y_INDEXED:
       return this->format_absolute_addr_arguments (args) + ",Y";
+    case AM_IMMEDIATE:
+      return std::format ("#${:02X}", args.at (0));
     case AM_ZERO_PAGE:
       return std::format ("${:02X}", args.at (0));
     case AM_ZERO_PAGE_X_INDEXED:
       return std::format ("${:02X},X", args.at (0));
+    case AM_IMPLIED:
     default:
       return "";
     }
