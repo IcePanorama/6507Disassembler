@@ -31,6 +31,7 @@ set(INCL_FILES
     "${INCL_DIR}/disassembler.hpp"
     "${INCL_DIR}/instruction.hpp"
     "${INCL_DIR}/instruction_lookup.hpp"
+    "${INCL_DIR}/zero_page_lookup.hpp"
 )
 
 set(SRC_DIR "${PROJECT_SOURCE_DIR}/src")
@@ -40,6 +41,7 @@ set(SRC_FILES
     "${SRC_DIR}/instruction.cpp"
     "${SRC_DIR}/instruction_lookup.cpp"
     "${SRC_DIR}/main.cpp"
+    "${SRC_DIR}/zero_page_lookup.cpp"
 )
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})

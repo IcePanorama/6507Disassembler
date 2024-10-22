@@ -1,6 +1,7 @@
 #include "disassembler.hpp"
 #include "addressing_mode.hpp"
 #include "instruction_lookup.hpp"
+#include "zero_page_lookup.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -82,6 +83,7 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
   line.append (this->format_arguments (i.get_addressing_mode (), arguments));
 
   // FIXME: this is a mess, clean up later.
+  const auto &zp_table = ZeroPageLookupTable::get_table ();
   switch (i.get_addressing_mode ())
     {
     case AM_ABSOLUTE:
@@ -101,6 +103,15 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
         {
           line.append (
               format_comments_for_mirrored_ROM_addresses (arguments, 0xF0));
+        }
+      break;
+    case AM_ZERO_PAGE:
+    case AM_ZERO_PAGE_X_INDEXED:
+    case AM_ZERO_PAGE_Y_INDEXED:
+      if (zp_table.find (arguments.at (0)) != zp_table.end ())
+        {
+          line.append (std::format ("\t; {:02X} == {}", arguments.at (0),
+                                    zp_table.at (arguments.at (0))));
         }
       break;
     default:
@@ -169,6 +180,6 @@ std::string
 Disassembler::format_comments_for_mirrored_ROM_addresses (
     const std::vector<uint8_t> &args, uint8_t mirror_start_hi)
 {
-  return std::format ("\t ; ROM address ${:02X}{:02X} via mirror", args.at (0),
+  return std::format ("\t; ROM address ${:02X}{:02X} via mirror", args.at (0),
                       args.at (1) - mirror_start_hi);
 }
