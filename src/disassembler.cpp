@@ -90,20 +90,17 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
       if (0xB0 <= arguments.at (1) && arguments.at (1) <= 0xBF)
         {
           line.append (
-              std::format ("\t ; ROM address ${:02X}{:02X} via mirror",
-                           arguments.at (0), arguments.at (1) - 0xB0));
+              format_comments_for_mirrored_ROM_addresses (arguments, 0xB0));
         }
       if (0x70 <= arguments.at (1) && arguments.at (1) <= 0x7F) //
         {
           line.append (
-              std::format ("\t ; ROM address ${:02X}{:02X} via mirror",
-                           arguments.at (0), arguments.at (1) - 0x7F));
+              format_comments_for_mirrored_ROM_addresses (arguments, 0x70));
         }
       else if (arguments.at (1) >= 0xF0) // 0xF0xx .. 0xFFFF
         {
           line.append (
-              std::format ("\t ; ROM address ${:02X}{:02X} via mirror",
-                           arguments.at (0), arguments.at (1) - 0xF0));
+              format_comments_for_mirrored_ROM_addresses (arguments, 0xF0));
         }
       break;
     default:
@@ -166,4 +163,12 @@ std::string
 Disassembler::format_zero_page_addr_arguments (const uint8_t &arg)
 {
   return std::format ("${:02X}", arg);
+}
+
+std::string
+Disassembler::format_comments_for_mirrored_ROM_addresses (
+    const std::vector<uint8_t> &args, uint8_t mirror_start_hi)
+{
+  return std::format ("\t ; ROM address ${:02X}{:02X} via mirror", args.at (0),
+                      args.at (1) - mirror_start_hi);
 }

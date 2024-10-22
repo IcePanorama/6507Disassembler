@@ -21,6 +21,9 @@ class Disassembler
   std::string
   format_absolute_addr_arguments (const std::vector<uint8_t> &args);
   std::string format_zero_page_addr_arguments (const uint8_t &arg);
+  std::string
+  format_comments_for_mirrored_ROM_addresses (const std::vector<uint8_t> &args,
+                                              uint8_t mirror_start_hi);
 
 public:
   Disassembler (void) = default;
