@@ -6,6 +6,7 @@ releases/*
 *.json
 vgcore.*
 *.hexdump
+*.txt
 
 # atari 2600 rom files
 *.a26

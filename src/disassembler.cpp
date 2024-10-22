@@ -71,7 +71,7 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
     byte_string.append (std::format (" {:02X}", arg));
 
   std::string line = std::format (line_format, location, byte_string);
-  // std::string line = std::format (line_format, location + 0xF000,
+  // std::string line = std::format (line_format, location + 0x1000,
   // byte_string);
   if (i.get_num_arguments () != 0 && i.get_num_arguments () % 2 == 0)
     line.append ("\t");
@@ -80,6 +80,36 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
 
   line.append (std::format ("{} ", i.get_asm_instruction ()));
   line.append (this->format_arguments (i.get_addressing_mode (), arguments));
+
+  // FIXME: this is a mess, clean up later.
+  switch (i.get_addressing_mode ())
+    {
+    case AM_ABSOLUTE:
+    case AM_ABSOLUTE_X_INDEXED:
+    case AM_ABSOLUTE_Y_INDEXED:
+      if (0xB0 <= arguments.at (1) && arguments.at (1) <= 0xBF)
+        {
+          line.append (
+              std::format ("\t ; ROM address ${:02X}{:02X} via mirror",
+                           arguments.at (0), arguments.at (1) - 0xB0));
+        }
+      if (0x70 <= arguments.at (1) && arguments.at (1) <= 0x7F) //
+        {
+          line.append (
+              std::format ("\t ; ROM address ${:02X}{:02X} via mirror",
+                           arguments.at (0), arguments.at (1) - 0x7F));
+        }
+      else if (arguments.at (1) >= 0xF0) // 0xF0xx .. 0xFFFF
+        {
+          line.append (
+              std::format ("\t ; ROM address ${:02X}{:02X} via mirror",
+                           arguments.at (0), arguments.at (1) - 0xF0));
+        }
+      break;
+    default:
+      break;
+    }
+
   line.append ("\n");
 
   output_fptr.write (line.c_str (), line.length ());
