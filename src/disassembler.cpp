@@ -110,6 +110,8 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
     case AM_ZERO_PAGE_Y_INDEXED:
       if (zp_table.find (arguments.at (0)) != zp_table.end ())
         {
+          if (i.get_addressing_mode () == AM_ZERO_PAGE)
+            line.append ("\t");
           line.append (std::format ("\t; {:02X} == {}", arguments.at (0),
                                     zp_table.at (arguments.at (0))));
         }
