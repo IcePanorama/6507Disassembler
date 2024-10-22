@@ -23,7 +23,8 @@ InstructionLookupTable::get_table (void)
      */
     { 0x29, Instruction ("AND", 0x29, AM_IMMEDIATE, 1, 2) },
     { 0x25, Instruction ("AND", 0x25, AM_ZERO_PAGE, 1, 3) },
-    { 0x31, Instruction ("AND", 0x31, AM_INDIRECT_Y_INDEXED, 1, 5) },  // +1 cycle if page boundary crossed
+    { 0x21, Instruction ("AND", 0x21, AM_INDIRECT_X_INDEXED, 1, 6) },
+    ////{ 0x31, Instruction ("AND", 0x31, AM_INDIRECT_Y_INDEXED, 1, 5) }, // +1 cycle if page boundary crossed
 
     /**
      *  ASL (Arithmetic Shift Left). Affects Flags: N Z C.
@@ -72,7 +73,7 @@ InstructionLookupTable::get_table (void)
     { 0xC5, Instruction ("CMP", 0xC5, AM_ZERO_PAGE, 1, 3) },
     { 0xD5, Instruction ("CMP", 0xD5, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
     { 0xDD, Instruction ("CMP", 0xDD, AM_ABSOLUTE_X_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
-    { 0xC1, Instruction ("CMP", 0xC1, AM_INDIRECT_X_INDEXED, 1, 6) }, // +1 cycle if page boundary crossed
+    { 0xC1, Instruction ("CMP", 0xC1, AM_INDIRECT_X_INDEXED, 1, 6) },
 
     /**
      *  CPX (ComPare X register). Affects Flags: N Z C.
@@ -93,6 +94,12 @@ InstructionLookupTable::get_table (void)
      */
     { 0xC6, Instruction ("DEC", 0xC6, AM_ZERO_PAGE, 1, 5) },
     { 0xD6, Instruction ("DEC", 0xD6, AM_ZERO_PAGE_X_INDEXED, 1, 6) },
+
+    /**
+     *  EOR (bitwise Exclusive OR). Affects Flags: N Z.
+     *  @see: http://www.6502.org/tutorials/6502opcodes.html#EOR
+     */
+    { 0x41, Instruction ("EOR", 0x41, AM_INDIRECT_X_INDEXED, 1, 6) },
 
     /**
      *  Flag (Processor Status) Instructions
@@ -121,13 +128,6 @@ InstructionLookupTable::get_table (void)
     { 0x20, Instruction ("JSR", 0x20, AM_ABSOLUTE, 2, 6) },
 
     /**
-     *  LSR (Logical Shift Right).
-     *  @see: http://www.6502.org/tutorials/6502opcodes.html#LSR
-     */
-    { 0x4A, Instruction ("LSR", 0x4A, AM_ACCUMULATOR, 0, 2) },
-    { 0x46, Instruction ("LSR", 0x46, AM_ZERO_PAGE, 1, 5) },
-
-    /**
      *  LDA (LoaD Accumulator). Affects Flags: N Z.
      *  @see: http://www.6502.org/tutorials/6502opcodes.html#LDA
      */
@@ -137,15 +137,15 @@ InstructionLookupTable::get_table (void)
     { 0xAD, Instruction ("LDA", 0xAD, AM_ABSOLUTE, 2, 4) },
     { 0xBD, Instruction ("LDA", 0xBD, AM_ABSOLUTE_X_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
     { 0xB9, Instruction ("LDA", 0xB9, AM_ABSOLUTE_Y_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
-    { 0xA1, Instruction ("LDA", 0xA1, AM_INDIRECT_X_INDEXED, 1, 6) },
+    //{ 0xA1, Instruction ("LDA", 0xA1, AM_INDIRECT_X_INDEXED, 1, 6) },
     { 0xB1, Instruction ("LDA", 0xB1, AM_INDIRECT_Y_INDEXED, 1, 5) }, // +1 cycle if page boundary crossed
 
     /**
      *  LDX (LoaD X register). Affects Flags: N Z.
      *  @see: http://www.6502.org/tutorials/6502opcodes.html#LDX
      */
+    { 0xA2, Instruction ("LDX", 0xA2, AM_IMMEDIATE, 1, 2) },
     { 0xA6, Instruction ("LDX", 0xA6, AM_ZERO_PAGE, 1, 3) },
-    { 0xA2, Instruction ("LDX", 0xA2, AM_ABSOLUTE, 1, 2) },
     { 0xBE, Instruction ("LDX", 0xBE, AM_ABSOLUTE_Y_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed.
 
     /**
@@ -158,12 +158,20 @@ InstructionLookupTable::get_table (void)
     { 0xBC, Instruction ("LDY", 0xBC, AM_ABSOLUTE_X_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed.
 
     /**
+     *  LSR (Logical Shift Right).
+     *  @see: http://www.6502.org/tutorials/6502opcodes.html#LSR
+     */
+    { 0x4A, Instruction ("LSR", 0x4A, AM_ACCUMULATOR, 0, 2) },
+    { 0x46, Instruction ("LSR", 0x46, AM_ZERO_PAGE, 1, 5) },
+
+    /**
      *  ORA (bitwise OR with Accumulator). Affects Flags: N Z.
      *  @see: http://www.6502.org/tutorials/6502opcodes.html#ORA
      */
     { 0x09, Instruction ("ORA", 0x09, AM_IMMEDIATE, 1, 2) },
     { 0x05, Instruction ("ORA", 0x05, AM_ZERO_PAGE, 1, 3) },
-    { 0x11, Instruction ("ORA", 0x11, AM_INDIRECT_Y_INDEXED, 1, 5) }, // +1 cycle if page boundary crossed.
+    { 0x01, Instruction ("ORA", 0x01, AM_INDIRECT_X_INDEXED, 1, 6) },
+    //{ 0x11, Instruction ("ORA", 0x11, AM_INDIRECT_Y_INDEXED, 1, 5) }, // +1 cycle if page boundary crossed.
 
     /**
      *  Register Instructions
@@ -205,20 +213,21 @@ InstructionLookupTable::get_table (void)
     { 0x60, Instruction ("RTS", 0x60, AM_IMPLIED, 0, 6) },
 
     /**
-     *  STA (STore Accumulator). Affects Flags: none.
-     *  @see: http://www.6502.org/tutorials/6502opcodes.html#STA
-     */
-    { 0x85, Instruction ("STA", 0x85, AM_ZERO_PAGE, 1, 3) },
-    { 0x95, Instruction ("STA", 0x95, AM_ZERO_PAGE_X_INDEXED, 1, 3) },
-
-    /**
      *  SBC (SuBtract with Carry). Affects Flags: N V Z C.
      *  @see: http://www.6502.org/tutorials/6502opcodes.html#SBC
      */
     { 0xE9, Instruction ("SBC", 0xE9, AM_IMMEDIATE, 1, 2) },
     { 0xE5, Instruction ("SBC", 0xE5, AM_ZERO_PAGE, 1, 3) },
     { 0xFD, Instruction ("SBC", 0xFD, AM_ABSOLUTE_X_INDEXED, 2, 4) }, // +1 cycle if page boundary is crossed.
-    { 0xF1, Instruction ("SBC", 0xF1, AM_INDIRECT_Y_INDEXED, 2, 5) }, // +1 cycle if page boundary is crossed.
+    { 0xE1, Instruction ("SBC", 0xE1, AM_INDIRECT_X_INDEXED, 1, 6) },
+    ////{ 0xF1, Instruction ("SBC", 0xF1, AM_INDIRECT_Y_INDEXED, 1, 5) }, // +1 cycle if page boundary is crossed.
+
+    /**
+     *  STA (STore Accumulator). Affects Flags: none.
+     *  @see: http://www.6502.org/tutorials/6502opcodes.html#STA
+     */
+    { 0x85, Instruction ("STA", 0x85, AM_ZERO_PAGE, 1, 3) },
+    { 0x95, Instruction ("STA", 0x95, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
 
     /**
      *  Stack Instructions
