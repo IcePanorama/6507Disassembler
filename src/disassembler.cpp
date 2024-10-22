@@ -67,6 +67,8 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
     byte_string.append (std::format (" {:02X}", arg));
 
   std::string line = std::format (line_format, location, byte_string);
+  // std::string line = std::format (line_format, location + 0xF000,
+  // byte_string);
   if (i.get_num_arguments () != 0 && i.get_num_arguments () % 2 == 0)
     line.append ("\t");
   else
@@ -104,9 +106,11 @@ Disassembler::format_arguments (const AddressingMode_e &am,
       // unsure how this should be formatted
       return std::format ("{:02X}", args.at (0));
     case AM_ZERO_PAGE:
-      return std::format ("${:02X}", args.at (0));
+      return this->format_zero_page_addr_arguments (args.at (0));
+    case AM_ZERO_PAGE_Y_INDEXED:
+      return this->format_zero_page_addr_arguments (args.at (0)) + ",Y";
     case AM_ZERO_PAGE_X_INDEXED:
-      return std::format ("${:02X},X", args.at (0));
+      return this->format_zero_page_addr_arguments (args.at (0)) + ",X";
     case AM_IMPLIED:
     default:
       return "";
@@ -120,4 +124,10 @@ Disassembler::format_absolute_addr_arguments (const std::vector<uint8_t> &args)
   for (const auto &arg : args)
     output += std::format ("{:02X}", arg);
   return output;
+}
+
+std::string
+Disassembler::format_zero_page_addr_arguments (const uint8_t &arg)
+{
+  return std::format ("${:02X}", arg);
 }
