@@ -16,6 +16,7 @@ InstructionLookupTable::get_table (void)
     { 0x65, Instruction ("ADC", 0x65, AM_ZERO_PAGE, 1, 3) },
     { 0x75, Instruction ("ADC", 0x75, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
     { 0x7D, Instruction ("ADC", 0x7D, AM_ABSOLUTE_X_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
+    { 0x79, Instruction ("ADC", 0x79, AM_ABSOLUTE_Y_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
     { 0x61, Instruction ("ADC", 0x61, AM_INDIRECT_X_INDEXED, 1, 6) },
     { 0x71, Instruction ("ADC", 0x71, AM_INDIRECT_Y_INDEXED, 1, 5) }, // +1 cycle if page boundary crossed
 
@@ -111,6 +112,7 @@ InstructionLookupTable::get_table (void)
      */
     { 0xC0, Instruction ("CPY", 0xC0, AM_IMMEDIATE, 1, 2) },
     { 0xC4, Instruction ("CPY", 0xC4, AM_ZERO_PAGE, 1, 3) },
+    { 0xCC, Instruction ("CPY", 0xCC, AM_ABSOLUTE, 2, 4) },
 
     /**
      *  DCP (DCM)
@@ -124,6 +126,7 @@ InstructionLookupTable::get_table (void)
     { 0xD7, Instruction ("DCP", 0xD7, AM_ZERO_PAGE_X_INDEXED, 1, 6) },
     { 0xDF, Instruction ("DCP", 0xDF, AM_ABSOLUTE_X_INDEXED, 2, 7) },
     { 0xDB, Instruction ("DCP", 0xDB, AM_ABSOLUTE_Y_INDEXED, 2, 7) },
+    { 0xC3, Instruction ("DCP", 0xC3, AM_INDIRECT_X_INDEXED, 1, 8) },
     { 0xD3, Instruction ("DCP", 0xD3, AM_INDIRECT_Y_INDEXED, 1, 8) },
 
     /**
@@ -132,6 +135,7 @@ InstructionLookupTable::get_table (void)
      */
     { 0xC6, Instruction ("DEC", 0xC6, AM_ZERO_PAGE, 1, 5) },
     { 0xD6, Instruction ("DEC", 0xD6, AM_ZERO_PAGE_X_INDEXED, 1, 6) },
+    { 0xDE, Instruction ("DEC", 0xDE, AM_ABSOLUTE_X_INDEXED, 2, 7) },
 
     /**
      *  EOR (bitwise Exclusive OR). Affects Flags: N Z.
@@ -140,8 +144,9 @@ InstructionLookupTable::get_table (void)
     { 0x49, Instruction ("EOR", 0x49, AM_IMMEDIATE, 1, 2) },
     { 0x45, Instruction ("EOR", 0x45, AM_ZERO_PAGE, 1, 3) },
     { 0x55, Instruction ("EOR", 0x55, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
-    { 0x59, Instruction ("EOR", 0x59, AM_ABSOLUTE_Y_INDEXED, 2, 4) },  // +1 cycle if page boundary crossed
+    { 0x59, Instruction ("EOR", 0x59, AM_ABSOLUTE_Y_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
     { 0x41, Instruction ("EOR", 0x41, AM_INDIRECT_X_INDEXED, 1, 6) },
+    { 0x51, Instruction ("EOR", 0x51, AM_INDIRECT_Y_INDEXED, 1, 5) }, // +1 cycle if page boundary crossed
 
     /**
      *  Flag (Processor Status) Instructions
@@ -156,17 +161,19 @@ InstructionLookupTable::get_table (void)
     { 0xF8, Instruction ("SED", 0xF8, AM_IMPLIED, 0, 2) },
 
     /**
-     *  Hidden/secret/illegal NOPs (including DOP, TOP)
+     *  Undocumented NOPs (including DOP, TOP)
      *
      *  Instructions effecting in 'no operations' in various address modes.
      *  Operands are ignored.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#NOPs
      */
+    { 0x1A, Instruction ("NOP", 0x1A, AM_IMPLIED, 0, 2) },
     { 0x3A, Instruction ("NOP", 0x3A, AM_IMPLIED, 0, 2) },
     { 0x5A, Instruction ("NOP", 0x5A, AM_IMPLIED, 0, 2) },
     { 0x7A, Instruction ("NOP", 0x7A, AM_IMPLIED, 0, 2) },
     { 0xDA, Instruction ("NOP", 0xDA, AM_IMPLIED, 0, 2) },
     { 0x80, Instruction ("NOP", 0x80, AM_IMMEDIATE, 1, 2) },
+    { 0x82, Instruction ("NOP", 0x82, AM_IMMEDIATE, 1, 2) },
     { 0x89, Instruction ("NOP", 0x89, AM_IMMEDIATE, 1, 2) },
     { 0xC2, Instruction ("NOP", 0xC2, AM_IMMEDIATE, 1, 2) },
     { 0xE2, Instruction ("NOP", 0xE2, AM_IMMEDIATE, 1, 2) },
@@ -179,7 +186,13 @@ InstructionLookupTable::get_table (void)
     { 0x74, Instruction ("NOP", 0x74, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
     { 0xD4, Instruction ("NOP", 0xD4, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
     { 0xF4, Instruction ("NOP", 0xF4, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
+    { 0x0C, Instruction ("NOP", 0x0C, AM_ABSOLUTE, 2, 4) },
     { 0x1C, Instruction ("NOP", 0x1C, AM_ABSOLUTE_X_INDEXED, 2, 4) },
+    { 0x3C, Instruction ("NOP", 0x3C, AM_ABSOLUTE_X_INDEXED, 2, 4) },
+    { 0x5C, Instruction ("NOP", 0x5C, AM_ABSOLUTE_X_INDEXED, 2, 4) },
+    { 0x7C, Instruction ("NOP", 0x7C, AM_ABSOLUTE_X_INDEXED, 2, 4) },
+    { 0xDC, Instruction ("NOP", 0xDC, AM_ABSOLUTE_X_INDEXED, 2, 4) },
+    { 0xFC, Instruction ("NOP", 0xFC, AM_ABSOLUTE_X_INDEXED, 2, 4) },
 
     /**
      *  INC (INCrement memory). Affects Flags: N Z.
@@ -229,6 +242,7 @@ InstructionLookupTable::get_table (void)
      *  @see: http://www.6502.org/tutorials/6502opcodes.html#JMP
      */
     { 0x4C, Instruction ("JMP", 0x4C, AM_ABSOLUTE, 2, 3) },
+    { 0x6C, Instruction ("JMP", 0x6C, AM_INDIRECT, 2, 5) },
 
     /**
      *  JSR (Jump to SubRoutine). Affects Flags: none.
@@ -290,6 +304,7 @@ InstructionLookupTable::get_table (void)
      */
     { 0x4A, Instruction ("LSR", 0x4A, AM_ACCUMULATOR, 0, 2) },
     { 0x46, Instruction ("LSR", 0x46, AM_ZERO_PAGE, 1, 5) },
+    { 0x56, Instruction ("LSR", 0x56, AM_ZERO_PAGE_X_INDEXED, 1, 6) },
     { 0x5E, Instruction ("LSR", 0x5E, AM_ABSOLUTE_X_INDEXED, 2, 7) },
 
     /**
@@ -316,7 +331,7 @@ InstructionLookupTable::get_table (void)
     { 0x1D, Instruction ("ORA", 0x1D, AM_ABSOLUTE_X_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed.
     { 0x19, Instruction ("ORA", 0x19, AM_ABSOLUTE_Y_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed.
     { 0x01, Instruction ("ORA", 0x01, AM_INDIRECT_X_INDEXED, 1, 6) },
-    //{ 0x11, Instruction ("ORA", 0x11, AM_INDIRECT_Y_INDEXED, 1, 5) }, // +1 cycle if page boundary crossed.
+    { 0x11, Instruction ("ORA", 0x11, AM_INDIRECT_Y_INDEXED, 1, 5) }, // +1 cycle if page boundary crossed.
 
     /**
      *  Register Instructions
@@ -342,6 +357,7 @@ InstructionLookupTable::get_table (void)
     { 0x2A, Instruction ("ROL", 0x2A, AM_ACCUMULATOR, 0, 2) },
     { 0x26, Instruction ("ROL", 0x26, AM_ZERO_PAGE, 1, 5) },
     { 0x36, Instruction ("ROL", 0x36, AM_ZERO_PAGE_X_INDEXED, 1, 6) },
+    { 0x2E, Instruction ("ROL", 0x2E, AM_ABSOLUTE, 2, 6) },
     { 0x3E, Instruction ("ROL", 0x36, AM_ABSOLUTE_X_INDEXED, 2, 7) },
 
     /**
@@ -358,6 +374,7 @@ InstructionLookupTable::get_table (void)
      *  RLA. ROL oper + AND oper.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#RLA
      */
+    { 0x27, Instruction ("RLA", 0x27, AM_ZERO_PAGE, 1, 5) },
     { 0x37, Instruction ("RLA", 0x37, AM_ZERO_PAGE_X_INDEXED, 1, 6) },
     { 0x2F, Instruction ("RLA", 0x2F, AM_ABSOLUTE, 2, 6) },
     { 0x3F, Instruction ("RLA", 0x3F, AM_ABSOLUTE_X_INDEXED, 2, 7) },

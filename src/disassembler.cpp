@@ -40,6 +40,7 @@ Disassembler::process_file (void)
       location = static_cast<uint16_t> (this->input_fptr.tellg ()) - 1;
       if (table.find (static_cast<uint8_t> (b)) != table.end ())
         {
+          // std::cout << std::format ("{:04X} {:02X}\n", location, b);
           this->process_instruction (table.at (static_cast<uint8_t> (b)),
                                      location);
         }
@@ -60,6 +61,9 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
   std::vector<uint8_t> arguments (i.get_num_arguments ());
   this->input_fptr.read (reinterpret_cast<char *> (arguments.data ()),
                          arguments.size ());
+  if (this->input_fptr.eof ())
+    return;
+
   arguments.resize (static_cast<size_t> (this->input_fptr.gcount ()));
 
   std::string byte_string = std::format ("{:02X}", i.get_opcode ());
@@ -98,6 +102,8 @@ Disassembler::format_arguments (const AddressingMode_e &am,
       return this->format_absolute_addr_arguments (args) + ",Y";
     case AM_IMMEDIATE:
       return std::format ("#${:02X}", args.at (0));
+    case AM_INDIRECT:
+      return std::format ("(${:02X}{:02X})", args.at (0), args.at (1));
     case AM_INDIRECT_X_INDEXED:
       return std::format ("(${:02X},X)", args.at (0));
     case AM_INDIRECT_Y_INDEXED:
