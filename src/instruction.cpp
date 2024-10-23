@@ -15,11 +15,9 @@ Instruction::Instruction (const std::string &asm_instruction, uint8_t opcode,
 std::string
 Instruction::to_string (void) const
 {
-  return std::format (
-      "{}\t[{:02X} | {}]\tSize in bytes/Num cycles: {:02X} / {:02X}",
-      this->asm_instruction_, this->opcode_,
-      addressing_mode_to_str (this->addr_mode_), this->num_arguments_,
-      this->num_cycles_);
+  return std::format ("{} {:02X} {} {:02X} {:02X}", this->asm_instruction_,
+                      this->opcode_, addressing_mode_to_str (this->addr_mode_),
+                      this->num_arguments_, this->num_cycles_);
 }
 
 std::ostream &
