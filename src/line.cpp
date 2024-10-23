@@ -101,12 +101,13 @@ Line::create_comments (const AddressingMode_e &am,
     case AM_ABSOLUTE:
     case AM_ABSOLUTE_X_INDEXED:
     case AM_ABSOLUTE_Y_INDEXED:
-      // output.append (format_absolute_addr_arguments (args));
+      output.append (this->create_comments_for_absolute_addressing (args));
       break;
     case AM_ZERO_PAGE:
     case AM_ZERO_PAGE_X_INDEXED:
     case AM_ZERO_PAGE_Y_INDEXED:
-      output.append (create_comments_for_zero_page_addressing (args.at (0)));
+      output.append (
+          this->create_comments_for_zero_page_addressing (args.at (0)));
       break;
     default:
       break;
