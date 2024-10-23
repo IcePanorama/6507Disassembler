@@ -16,8 +16,8 @@ class Line
   const Instruction &instruction_;
   const std::vector<uint8_t> arguments_;
   /** The human-readable version of this instruction. */
-  std::string assembly_instruction_;
-  std::string comment_;
+  std::string assembly_instruction;
+  std::string comment;
 
   std::string format_arguments (const AddressingMode_e &am,
                                 const std::vector<uint8_t> &args);
@@ -38,6 +38,9 @@ public:
   Line (const uint16_t starting_addr, const Instruction &instruction,
         const std::vector<uint8_t> arguments);
 
+  uint16_t get_starting_addr (void) const;
+  uint8_t get_instruction_length (void) const;
+  std::string to_string (void) const;
   friend std::ostream &operator<< (std::ostream &os, const Line &l);
 };
 

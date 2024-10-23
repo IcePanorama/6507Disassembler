@@ -15,8 +15,11 @@ class Disassembler
   std::ofstream output_fptr;
 
   std::vector<Line> lines;
+  // an incomplete line, likely part of some data
+  std::vector<uint8_t> leftover_bytes;
 
   void process_instruction (const Instruction &i, uint16_t location);
+  void export_program (void);
 
 public:
   Disassembler (void) = default;

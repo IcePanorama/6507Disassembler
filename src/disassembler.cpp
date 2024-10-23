@@ -1,6 +1,7 @@
 #include "disassembler.hpp"
 #include "instruction_lookup.hpp"
 
+#include <cstdint>
 #include <format>
 #include <iostream>
 #include <stdexcept>
@@ -36,6 +37,8 @@ Disassembler::process_file (void)
       this->process_instruction (
           table.at (b), static_cast<uint16_t> (this->input_fptr.tellg ()) - 1);
     }
+
+  export_program ();
 }
 
 void
@@ -45,10 +48,33 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
   input_fptr.read (reinterpret_cast<char *> (arguments.data ()),
                    arguments.size ());
   if (input_fptr.eof ())
-    return; // "incomplete" line, likely part of some data
+    {
+      leftover_bytes.push_back (i.get_opcode ());
+      return;
+    }
 
   arguments.resize (static_cast<size_t> (input_fptr.gcount ()));
 
   lines.push_back (Line (location, i, arguments));
-  std::cout << lines.at (lines.size () - 1) << std::endl;
+}
+
+void
+Disassembler::export_program (void)
+{
+  for (const Line &l : this->lines)
+    {
+      const std::string curr_output = std::format ("{}\n", l.to_string ());
+      this->output_fptr.write (curr_output.c_str (), curr_output.length ());
+    }
+
+  // Very hack-y, but it works
+  std::string leftovers = std::format (
+      "{:04X}  ", this->lines.back ().get_starting_addr ()
+                      + this->lines.back ().get_instruction_length ());
+  for (const uint8_t &b : this->leftover_bytes)
+    leftovers += std::format ("{:02X} ", b);
+  if (!leftovers.empty ())
+    leftovers.pop_back ();
+
+  this->output_fptr.write (leftovers.c_str (), leftovers.length ());
 }

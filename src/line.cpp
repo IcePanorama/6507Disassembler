@@ -2,17 +2,26 @@
 #include "zero_page_lookup.hpp"
 
 #include <format>
+#include <string>
+
+#define RAW_BYTES_STR_LEN (8)
+// len(LDA_$FFFF,X) == 11
+#define ASM_INSTRUCTION_STR_LEN (11)
 
 Line::Line (const uint16_t starting_addr, const Instruction &instruction,
             const std::vector<uint8_t> arguments)
     : starting_addr_ (starting_addr), instruction_ (instruction),
       arguments_ (arguments)
 {
-  this->assembly_instruction_ = std::format (
+  this->assembly_instruction = std::format (
       "{} {}", this->instruction_.get_asm_instruction (),
       this->format_arguments (this->instruction_.get_addressing_mode (),
                               arguments_));
-  this->comment_ = this->create_comments (
+  this->assembly_instruction.insert (
+      this->assembly_instruction.end (),
+      ASM_INSTRUCTION_STR_LEN - this->assembly_instruction.size (), ' ');
+
+  this->comment = this->create_comments (
       this->instruction_.get_addressing_mode (), arguments_);
 }
 
@@ -23,7 +32,7 @@ operator<< (std::ostream &os, const Line &l)
                      l.instruction_.to_string ());
   for (const auto &arg : l.arguments_)
     os << std::format ("{:02X} ", arg);
-  os << std::format ("] {} {}", l.assembly_instruction_, l.comment_);
+  os << std::format ("] {} {}", l.assembly_instruction, l.comment);
 
   return os;
 }
@@ -146,3 +155,38 @@ Line::create_comments_for_zero_page_addressing (const uint8_t &arg)
     return "in RIOT RAM";
   return "";
 }
+
+std::string
+Line::to_string (void) const
+{
+  std::string raw_bytes
+      = std::format ("{:02X} ", this->instruction_.get_opcode ());
+  for (const auto &arg : this->arguments_)
+    raw_bytes.append (std::format ("{:02X} ", arg));
+
+  if (!raw_bytes.empty ())
+    raw_bytes.pop_back ();
+
+  raw_bytes.insert (raw_bytes.end (), RAW_BYTES_STR_LEN - raw_bytes.size (),
+                    ' ');
+
+  return std::format ("{:04X}  {}  {}  {}", this->starting_addr_, raw_bytes,
+                      this->assembly_instruction,
+                      this->comment.empty () ? "" : "; " + this->comment);
+}
+
+uint16_t
+Line::get_starting_addr (void) const
+{
+  return this->starting_addr_;
+}
+
+uint8_t
+Line::get_instruction_length (void) const
+{
+  // +1 for op code
+  return this->instruction_.get_num_arguments () + 1;
+}
+
+#undef RAW_BYTES_STR_LEN
+#undef ASM_INSTRUCTION_STR_LEN
