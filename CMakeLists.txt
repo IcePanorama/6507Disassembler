@@ -41,6 +41,7 @@ set(SRC_FILES
     "${SRC_DIR}/disassembler.cpp"
     "${SRC_DIR}/instruction.cpp"
     "${SRC_DIR}/instruction_lookup.cpp"
+    "${SRC_DIR}/line.cpp"
     "${SRC_DIR}/main.cpp"
     "${SRC_DIR}/zero_page_lookup.cpp"
 )

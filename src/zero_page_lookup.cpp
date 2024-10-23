@@ -57,3 +57,4 @@ ZeroPageLookupTable::get_table (void)
   };
   return table;
 }
+/* clang-format on */

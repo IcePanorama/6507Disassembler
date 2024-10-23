@@ -36,7 +36,9 @@ Disassembler::process_file (void)
   char b;
   while (this->input_fptr.read (&b, sizeof (b)))
     {
-      assert (table.find (b) != table.end ());
+      if (table.find (b) == table.end ())
+        throw std::runtime_error (std::format (
+            "Error: instruction not found for op code, {:02X}\n", b));
       this->process_instruction (
           table.at (b), static_cast<uint16_t> (this->input_fptr.tellg ()) - 1);
     }

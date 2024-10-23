@@ -3,20 +3,27 @@
 
 #include "instruction.hpp"
 
+#include <array>
+#include <cstdint>
 #include <string>
-#include <vector>
+
+#define MAX_NUM_ARGUMENTS (2)
 
 class Line
 {
-  uint16_t starting_addr;
-  Instruction instruction;
-  std::vector<uint8_t> arguments; // Max n arguments = 2
+  const uint16_t starting_addr_;
+  const Instruction instruction_;
+  const std::array<uint8_t, MAX_NUM_ARGUMENTS> arguments_;
   /** The human-readable version of this instruction. */
-  std::string assembly_instruction;
-  std::string comment;
+  const std::string assembly_instruction_;
+  const std::string comment_;
 
 public:
-  Line (void) = default;
+  Line (const uint16_t starting_addr, const Instruction instruction,
+        const std::array<uint8_t, 2> arguments,
+        const std::string assembly_instruction, const std::string comment);
 };
+
+#undef MAX_NUM_ARGUMENTS
 
 #endif /* _LINE_HPP_ */
