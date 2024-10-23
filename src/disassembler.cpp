@@ -108,12 +108,15 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
     case AM_ZERO_PAGE:
     case AM_ZERO_PAGE_X_INDEXED:
     case AM_ZERO_PAGE_Y_INDEXED:
+      if (i.get_addressing_mode () == AM_ZERO_PAGE)
+        line.append ("\t");
       if (zp_table.find (arguments.at (0)) != zp_table.end ())
         {
-          if (i.get_addressing_mode () == AM_ZERO_PAGE)
-            line.append ("\t");
-          line.append (std::format ("\t; {:02X} == {}", arguments.at (0),
-                                    zp_table.at (arguments.at (0))));
+          line.append (std::format ("\t; {}", zp_table.at (arguments.at (0))));
+        }
+      else if (0x80 <= arguments.at (0))
+        {
+          line.append ("\t; in RIOT RAM");
         }
       break;
     default:
