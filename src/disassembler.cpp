@@ -3,6 +3,7 @@
 #include "instruction_lookup.hpp"
 #include "zero_page_lookup.hpp"
 
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <format>
@@ -31,25 +32,13 @@ Disassembler::initialize (const std::string &input_filename,
 void
 Disassembler::process_file (void)
 {
-  uint16_t location = 0;
-  std::vector<uint8_t> raw_instruction;
   const auto &table = InstructionLookupTable::get_table ();
-
   char b;
   while (this->input_fptr.read (&b, sizeof (b)))
     {
-      location = static_cast<uint16_t> (this->input_fptr.tellg ()) - 1;
-      if (table.find (static_cast<uint8_t> (b)) != table.end ())
-        {
-          // std::cout << std::format ("{:04X} {:02X}\n", location, b);
-          this->process_instruction (table.at (static_cast<uint8_t> (b)),
-                                     location);
-        }
-      else
-        {
-          std::cout << std::format ("{:02X}\n", b);
-          break;
-        }
+      assert (table.find (b) != table.end ());
+      this->process_instruction (
+          table.at (b), static_cast<uint16_t> (this->input_fptr.tellg ()) - 1);
     }
 }
 
@@ -82,7 +71,7 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
   line.append (create_comments (i.get_addressing_mode (), arguments));
   line.append ("\n");
 
-  output_fptr.write (line.c_str (), line.length ());
+  // output_fptr.write (line.c_str (), line.length ());
 }
 
 std::string

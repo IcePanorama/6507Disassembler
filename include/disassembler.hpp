@@ -3,6 +3,7 @@
 
 #include "addressing_mode.hpp"
 #include "instruction.hpp"
+#include "line.hpp"
 
 #include <cstdint>
 #include <fstream>
@@ -14,13 +15,18 @@ class Disassembler
   std::ifstream input_fptr;
   std::ofstream output_fptr;
 
+  std::vector<Line> lines;
+
   void process_instruction (const Instruction &i, uint16_t location);
-  // std::string format_arguments (const std::vector<uint8_t>& args);
+
+  /* Argument helper functions */
   std::string format_arguments (const AddressingMode_e &am,
                                 const std::vector<uint8_t> &args);
   std::string
   format_absolute_addr_arguments (const std::vector<uint8_t> &args);
   std::string format_zero_page_addr_arguments (const uint8_t &arg);
+
+  /* Comment helper function. */
   std::string create_comments (const AddressingMode_e &am,
                                const std::vector<uint8_t> &args);
   std::string

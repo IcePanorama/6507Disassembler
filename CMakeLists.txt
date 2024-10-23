@@ -31,6 +31,7 @@ set(INCL_FILES
     "${INCL_DIR}/disassembler.hpp"
     "${INCL_DIR}/instruction.hpp"
     "${INCL_DIR}/instruction_lookup.hpp"
+    "${INCL_DIR}/line.hpp"
     "${INCL_DIR}/zero_page_lookup.hpp"
 )
 
