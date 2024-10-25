@@ -61,7 +61,7 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
 void
 Disassembler::export_program (void)
 {
-  for (const Line &l : this->lines)
+  for (Line &l : this->lines)
     {
       const std::string curr_output = std::format ("{}\n", l.to_string ());
       this->output_fptr.write (curr_output.c_str (), curr_output.length ());

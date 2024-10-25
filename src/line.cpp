@@ -13,33 +13,61 @@ Line::Line (const uint16_t starting_addr, const Instruction &instruction,
     : starting_addr_ (starting_addr), instruction_ (instruction),
       arguments_ (arguments)
 {
-  this->assembly_instruction = std::format (
+}
+
+uint16_t
+Line::get_starting_addr (void) const
+{
+  return this->starting_addr_;
+}
+
+uint8_t
+Line::get_instruction_length (void) const
+{
+  // +1 for op code
+  return this->instruction_.get_num_arguments () + 1;
+}
+
+std::string
+Line::to_string (void)
+{
+  if (assembly_instruction.empty ())
+    assembly_instruction = this->create_assembly_instruction_string ();
+  if (comment.empty ())
+    comment = this->create_comments (this->instruction_.get_addressing_mode (),
+                                     this->arguments_);
+
+  std::string raw_bytes
+      = std::format ("{:02X} ", this->instruction_.get_opcode ());
+  for (const auto &arg : this->arguments_)
+    raw_bytes.append (std::format ("{:02X} ", arg));
+
+  if (!raw_bytes.empty ())
+    raw_bytes.pop_back ();
+
+  raw_bytes.insert (raw_bytes.end (), RAW_BYTES_STR_LEN - raw_bytes.size (),
+                    ' ');
+
+  return std::format ("{:04X}  {}  {}  {}", this->starting_addr_, raw_bytes,
+                      assembly_instruction,
+                      comment.empty () ? "" : "; " + comment);
+}
+
+std::string
+Line::create_assembly_instruction_string (void)
+{
+  std::string output = std::format (
       "{} {}", this->instruction_.get_asm_instruction (),
       this->format_arguments (this->instruction_.get_addressing_mode (),
                               arguments_));
-  this->assembly_instruction.insert (
-      this->assembly_instruction.end (),
-      ASM_INSTRUCTION_STR_LEN - this->assembly_instruction.size (), ' ');
 
-  this->comment = this->create_comments (
-      this->instruction_.get_addressing_mode (), arguments_);
-}
-
-std::ostream &
-operator<< (std::ostream &os, const Line &l)
-{
-  os << std::format ("{:04X} {} [ ", l.starting_addr_,
-                     l.instruction_.to_string ());
-  for (const auto &arg : l.arguments_)
-    os << std::format ("{:02X} ", arg);
-  os << std::format ("] {} {}", l.assembly_instruction, l.comment);
-
-  return os;
+  output.insert (output.end (), ASM_INSTRUCTION_STR_LEN - output.size (), ' ');
+  return output;
 }
 
 std::string
 Line::format_arguments (const AddressingMode_e &am,
-                        const std::vector<uint8_t> &args)
+                        const std::vector<uint8_t> &args) const
 {
   std::string output;
   switch (am)
@@ -76,7 +104,7 @@ Line::format_arguments (const AddressingMode_e &am,
 }
 
 std::string
-Line::format_absolute_addr_arguments (const std::vector<uint8_t> &args)
+Line::format_absolute_addr_arguments (const std::vector<uint8_t> &args) const
 {
   std::string output = "$";
   for (const auto &arg : args)
@@ -85,7 +113,7 @@ Line::format_absolute_addr_arguments (const std::vector<uint8_t> &args)
 }
 
 std::string
-Line::format_zero_page_addr_arguments (const uint8_t &arg)
+Line::format_zero_page_addr_arguments (const uint8_t &arg) const
 {
   return std::format ("${:02X}", arg);
 }
@@ -117,16 +145,8 @@ Line::create_comments (const AddressingMode_e &am,
 }
 
 std::string
-Line::format_comments_for_mirrored_ROM_addresses (
-    const std::vector<uint8_t> &args, uint8_t mirror_start_hi)
-{
-  return std::format ("ROM address ${:02X}{:02X} via mirror", args.at (0),
-                      args.at (1) - mirror_start_hi);
-}
-
-std::string
 Line::create_comments_for_absolute_addressing (
-    const std::vector<uint8_t> &args)
+    const std::vector<uint8_t> &args) const
 {
   if (0xB0 <= args.at (1) && args.at (1) <= 0xBF)
     {
@@ -145,7 +165,15 @@ Line::create_comments_for_absolute_addressing (
 }
 
 std::string
-Line::create_comments_for_zero_page_addressing (const uint8_t &arg)
+Line::format_comments_for_mirrored_ROM_addresses (
+    const std::vector<uint8_t> &args, uint8_t mirror_start_hi) const
+{
+  return std::format ("ROM address ${:02X}{:02X} via mirror", args.at (0),
+                      args.at (1) - mirror_start_hi);
+}
+
+std::string
+Line::create_comments_for_zero_page_addressing (const uint8_t &arg) const
 {
   static const auto &zp_table = ZeroPageLookupTable::get_table ();
   if (zp_table.find (arg) != zp_table.end ())
@@ -155,38 +183,6 @@ Line::create_comments_for_zero_page_addressing (const uint8_t &arg)
   else if (0x80 <= arg)
     return "in RIOT RAM";
   return "";
-}
-
-std::string
-Line::to_string (void) const
-{
-  std::string raw_bytes
-      = std::format ("{:02X} ", this->instruction_.get_opcode ());
-  for (const auto &arg : this->arguments_)
-    raw_bytes.append (std::format ("{:02X} ", arg));
-
-  if (!raw_bytes.empty ())
-    raw_bytes.pop_back ();
-
-  raw_bytes.insert (raw_bytes.end (), RAW_BYTES_STR_LEN - raw_bytes.size (),
-                    ' ');
-
-  return std::format ("{:04X}  {}  {}  {}", this->starting_addr_, raw_bytes,
-                      this->assembly_instruction,
-                      this->comment.empty () ? "" : "; " + this->comment);
-}
-
-uint16_t
-Line::get_starting_addr (void) const
-{
-  return this->starting_addr_;
-}
-
-uint8_t
-Line::get_instruction_length (void) const
-{
-  // +1 for op code
-  return this->instruction_.get_num_arguments () + 1;
 }
 
 #undef RAW_BYTES_STR_LEN
