@@ -5,7 +5,7 @@ build/*
 releases/*
 *.json
 vgcore.*
-*.hexdump
+*.asm
 *.txt
 
 # atari 2600 rom files
