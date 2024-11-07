@@ -15,6 +15,10 @@ class Line
   const uint16_t starting_addr_;
   const Instruction &instruction_;
   const std::vector<uint8_t> arguments_;
+  //  std::optional<AbsoluteAddress> address;
+  //  if instruction.addr_mode.is_absolute();
+  //    address.emplace ();
+
   std::string assembly_instruction;
   std::string comment;
 

@@ -69,8 +69,8 @@ Disassembler::export_program (void)
 
   // Very hack-y, but it works
   std::string leftovers = std::format (
-      "{:04X}  ", this->lines.back ().get_starting_addr ()
-                      + this->lines.back ().get_instruction_length ());
+      "  {:04X}  ", this->lines.back ().get_starting_addr ()
+                        + this->lines.back ().get_instruction_length ());
   for (const uint8_t &b : this->leftover_bytes)
     leftovers += std::format ("{:02X} ", b);
   if (!leftovers.empty ())

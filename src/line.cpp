@@ -48,7 +48,7 @@ Line::to_string (void)
   raw_bytes.insert (raw_bytes.end (), RAW_BYTES_STR_LEN - raw_bytes.size (),
                     ' ');
 
-  return std::format ("{:04X}  {}  {}  {}", this->starting_addr_, raw_bytes,
+  return std::format ("  {:04X}  {}  {}  {}", this->starting_addr_, raw_bytes,
                       assembly_instruction,
                       comment.empty () ? "" : "; " + comment);
 }
@@ -122,7 +122,6 @@ std::string
 Line::create_comments (const AddressingMode_e &am,
                        const std::vector<uint8_t> &args)
 {
-  // FIXME: this is a mess, clean up later.
   std::string output = "";
   switch (am)
     {
