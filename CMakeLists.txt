@@ -28,10 +28,10 @@ set(CODE_STYLE GNU)
 set(INCL_DIR "${PROJECT_SOURCE_DIR}/include")
 set(INCL_FILES
     "${INCL_DIR}/addressing_mode.hpp"
-    "${INCL_DIR}/auto_label.hpp"
     "${INCL_DIR}/disassembler.hpp"
     "${INCL_DIR}/instruction.hpp"
     "${INCL_DIR}/instruction_lookup.hpp"
+    "${INCL_DIR}/label.hpp"
     "${INCL_DIR}/line.hpp"
     "${INCL_DIR}/zero_page_lookup.hpp"
 )
@@ -39,10 +39,10 @@ set(INCL_FILES
 set(SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 set(SRC_FILES
     "${SRC_DIR}/addressing_mode.cpp"
-    #"${SRC_DIR}/auto_label.cpp"
     "${SRC_DIR}/disassembler.cpp"
     "${SRC_DIR}/instruction.cpp"
     "${SRC_DIR}/instruction_lookup.cpp"
+    "${SRC_DIR}/label.cpp"
     "${SRC_DIR}/line.cpp"
     "${SRC_DIR}/main.cpp"
     "${SRC_DIR}/zero_page_lookup.cpp"
