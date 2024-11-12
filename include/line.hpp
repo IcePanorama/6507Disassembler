@@ -1,10 +1,12 @@
 #ifndef _LINE_HPP_
 #define _LINE_HPP_
 
+#include "absolute_address.hpp"
 #include "addressing_mode.hpp"
 #include "instruction.hpp"
 
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -15,9 +17,7 @@ class Line
   const uint16_t starting_addr_;
   const Instruction &instruction_;
   const std::vector<uint8_t> arguments_;
-  //  std::optional<AbsoluteAddress> address;
-  //  if instruction.addr_mode.is_absolute();
-  //    address.emplace ();
+  std::optional<AbsoluteAddress> abs_address; // FIXME: needs better name.
 
   std::string assembly_instruction;
   std::string comment;

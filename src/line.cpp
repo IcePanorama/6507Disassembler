@@ -1,6 +1,7 @@
 #include "line.hpp"
 #include "zero_page_lookup.hpp"
 
+#include <cstdint>
 #include <format>
 #include <string>
 
@@ -13,6 +14,9 @@ Line::Line (const uint16_t starting_addr, const Instruction &instruction,
     : starting_addr_ (starting_addr), instruction_ (instruction),
       arguments_ (arguments)
 {
+  if (adressing_mode_is_absolute (this->instruction_.get_addressing_mode ()))
+    this->abs_address.emplace ((this->arguments_.at (0) << 0x8)
+                               | this->arguments_.at (1));
 }
 
 uint16_t

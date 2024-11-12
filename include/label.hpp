@@ -16,6 +16,7 @@ class Label
 
 public:
   static const Label &get_label (uint16_t address);
+  std::string to_string (void) const;
 };
 
 #endif /* _LABEL_HPP_ */

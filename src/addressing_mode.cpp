@@ -11,3 +11,10 @@ addressing_mode_to_str (const AddressingMode_e am)
       return "";
     }
 }
+
+bool
+adressing_mode_is_absolute (const AddressingMode_e &am)
+{
+  return am == AM_ABSOLUTE || am == AM_ABSOLUTE_Y_INDEXED
+         || am == AM_ABSOLUTE_X_INDEXED;
+}

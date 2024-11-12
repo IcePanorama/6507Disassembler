@@ -1,9 +1,14 @@
 #include "absolute_address.hpp"
 
+#include <format>
+#include <iostream>
+
 AbsoluteAddress::AbsoluteAddress (uint16_t raw_address)
     : raw_address_ (raw_address), true_address (this->calc_true_address ()),
       label (Label::get_label (this->true_address))
 {
+  std::cout << std::format ("{:04X} {:04X} {}\n", raw_address_,
+                            this->true_address, this->label.to_string ());
 }
 
 uint16_t

@@ -17,3 +17,9 @@ Label::get_label (uint16_t address)
 
   return label_lookup.at (address);
 }
+
+std::string
+Label::to_string (void) const
+{
+  return this->label;
+}
