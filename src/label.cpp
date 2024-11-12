@@ -33,3 +33,12 @@ Label::get_num_usages (void) const
 {
   return this->num_usages;
 }
+
+std::optional<Label>
+Label::find_label (uint16_t address)
+{
+  if (label_lookup.contains (address))
+    return label_lookup.at (address);
+
+  return std::nullopt;
+}

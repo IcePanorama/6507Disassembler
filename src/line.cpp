@@ -1,9 +1,6 @@
 #include "line.hpp"
 #include "zero_page_lookup.hpp"
 
-// tmp
-#include <iostream>
-
 #include <cstdint>
 #include <format>
 #include <string>
@@ -16,7 +13,7 @@ Line::Line (const uint16_t starting_addr, const Instruction &instruction,
     : starting_addr_ (starting_addr), instruction_ (instruction),
       arguments_ (arguments)
 {
-  if (adressing_mode_is_absolute (this->instruction_.get_addressing_mode ()))
+  if (addressing_mode_is_absolute (this->instruction_.get_addressing_mode ()))
     this->abs_address.emplace ((this->arguments_.at (0) << 0x8)
                                | this->arguments_.at (1));
 }
@@ -191,6 +188,20 @@ Line::create_comments_for_zero_page_addressing (const uint8_t &arg) const
     return "in RIOT RAM";
   return "";
 }
+
+/*
+const Instruction &
+Line::get_instruction (void) const
+{
+  return this->instruction_;
+}
+
+std::optional<AbsoluteAddress>
+Line::get_absolute_address (void) const
+{
+  return this->abs_address;
+}
+*/
 
 #undef RAW_BYTES_STR_LEN
 #undef ASM_INSTRUCTION_STR_LEN

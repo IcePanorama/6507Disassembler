@@ -45,6 +45,10 @@ public:
   uint16_t get_starting_addr (void) const;
   uint8_t get_instruction_length (void) const;
   std::string to_string (void);
+  /*
+  const Instruction &get_instruction (void) const;
+  std::optional<AbsoluteAddress> get_absolute_address (void) const;
+  */
 };
 
 #endif /* _LINE_HPP_ */

@@ -2,6 +2,7 @@
 #define _LABEL_HPP_
 
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <unordered_map>
 
@@ -16,7 +17,10 @@ class Label
   Label (uint16_t address);
 
 public:
+  /** Returns existing label or creates new one. */
   static Label &get_label (uint16_t address);
+  /** Returns existing label. */
+  static std::optional<Label> find_label (uint16_t address);
 
   std::string to_string (void) const;
   uint32_t get_num_usages (void) const;

@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <format>
 #include <iostream>
+#include <optional>
 #include <stdexcept>
 
 void
@@ -64,6 +65,24 @@ Disassembler::export_program (void)
 {
   for (Line &l : this->lines)
     {
+      /*
+       *  Line starting addr is in big endian form, whereas the label lookup
+       *  table needs it in little endian form, hence this weird
+       *  hackjob/conversion going on.
+       *  TODO: Probably should get fixed eventually.
+       */
+      uint16_t le_start_addr = l.get_starting_addr ();
+      le_start_addr = ((le_start_addr & 0xFF) << 0x8)
+                      | ((le_start_addr & 0xFF00) >> 0x8);
+
+      std::optional<Label> label = Label::find_label (le_start_addr);
+      if (label.has_value () && label->get_num_usages () > 1)
+        {
+          const std::string label_str
+              = std::format ("{}:\n", label->to_string ());
+          this->output_fptr.write (label_str.c_str (), label_str.length ());
+        }
+
       const std::string curr_output = std::format ("{}\n", l.to_string ());
       this->output_fptr.write (curr_output.c_str (), curr_output.length ());
     }
