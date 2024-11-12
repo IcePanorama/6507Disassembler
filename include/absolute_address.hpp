@@ -13,6 +13,7 @@ class AbsoluteAddress
 
 public:
   AbsoluteAddress (uint16_t raw_address);
+  const Label &get_label (void) const;
 };
 
 #endif /* _ABSOLUTE_ADDRESS_HPP_ */

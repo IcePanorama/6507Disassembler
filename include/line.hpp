@@ -25,8 +25,7 @@ class Line
   std::string create_assembly_instruction_string (void);
   std::string format_arguments (const AddressingMode_e &am,
                                 const std::vector<uint8_t> &args) const;
-  std::string
-  format_absolute_addr_arguments (const std::vector<uint8_t> &args) const;
+  std::string format_absolute_addr_arguments (void) const;
   std::string format_zero_page_addr_arguments (const uint8_t &arg) const;
 
   std::string create_comments (const AddressingMode_e &am,

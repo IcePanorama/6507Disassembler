@@ -27,3 +27,9 @@ Label::to_string (void) const
   return this->num_usages > 1 ? this->name
                               : std::format ("{:04X}", this->address_);
 }
+
+uint32_t
+Label::get_num_usages (void) const
+{
+  return this->num_usages;
+}

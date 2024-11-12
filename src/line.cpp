@@ -1,13 +1,15 @@
 #include "line.hpp"
 #include "zero_page_lookup.hpp"
 
+// tmp
+#include <iostream>
+
 #include <cstdint>
 #include <format>
 #include <string>
 
 #define RAW_BYTES_STR_LEN (8)
-// len(LDA_$FFFF,X) == 11
-#define ASM_INSTRUCTION_STR_LEN (11)
+#define ASM_INSTRUCTION_STR_LEN (20)
 
 Line::Line (const uint16_t starting_addr, const Instruction &instruction,
             const std::vector<uint8_t> arguments)
@@ -79,11 +81,11 @@ Line::format_arguments (const AddressingMode_e &am,
     case AM_ACCUMULATOR:
       return "A";
     case AM_ABSOLUTE:
-      return this->format_absolute_addr_arguments (args);
+      return this->format_absolute_addr_arguments ();
     case AM_ABSOLUTE_X_INDEXED:
-      return this->format_absolute_addr_arguments (args) + ",X";
+      return this->format_absolute_addr_arguments () + ",X";
     case AM_ABSOLUTE_Y_INDEXED:
-      return this->format_absolute_addr_arguments (args) + ",Y";
+      return this->format_absolute_addr_arguments () + ",Y";
     case AM_IMMEDIATE:
       return std::format ("#${:02X}", args.at (0));
     case AM_INDIRECT:
@@ -108,11 +110,13 @@ Line::format_arguments (const AddressingMode_e &am,
 }
 
 std::string
-Line::format_absolute_addr_arguments (const std::vector<uint8_t> &args) const
+Line::format_absolute_addr_arguments (void) const
 {
-  std::string output = "$";
-  for (const auto &arg : args)
-    output += std::format ("{:02X}", arg);
+  std::string output = "";
+
+  if (this->abs_address->get_label ().get_num_usages () == 1)
+    output.append ("$");
+  output.append (this->abs_address->get_label ().to_string ());
   return output;
 }
 
