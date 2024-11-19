@@ -62,7 +62,7 @@ add_custom_target(format
 
 # Test target
 add_custom_target(test
-    COMMAND valgrind --leak-check=yes ./${PROJECT_NAME} 'E.T. - The Extra-Terrestrial \(USA\).a26'
+    COMMAND valgrind --leak-check=yes ./${PROJECT_NAME} 'E.T. - The Extra-Terrestrial \(USA\).a26' output
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Testing for memory leaks with Valgrind."
 )
