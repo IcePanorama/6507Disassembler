@@ -62,7 +62,7 @@ add_custom_target(format
 
 # Test target
 add_custom_target(test
-    COMMAND valgrind --leak-check=yes ./${PROJECT_NAME}
+    COMMAND valgrind --leak-check=yes ./${PROJECT_NAME} 'E.T. - The Extra-Terrestrial \(USA\).a26'
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Testing for memory leaks with Valgrind."
 )
@@ -84,9 +84,3 @@ set_property(
     TARGET 6507Disassembler
     PROPERTY ADDITIONAL_CLEAN_FILES "${CMAKE_BINARY_DIR}/output.hexdump;"
 )
-
-#set_property(
-#        TARGET 6507Disassembler
-#        APPEND
-#        PROPERTY ADDITIONAL_CLEAN_FILES "${CMAKE_BINARY_DIR}/output.hexdump"
-#)

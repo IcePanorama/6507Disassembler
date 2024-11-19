@@ -1,12 +1,22 @@
 #include "disassembler.hpp"
 
+#include <format>
+#include <iostream>
+#include <ostream>
 #include <stdexcept>
 #include <string>
 
 int
-main (void)
+main (int argc, char **argv)
 {
-  const std::string input_filename = "E.T. - The Extra-Terrestrial (USA).a26";
+  if (argc == 1)
+    {
+      std::cerr << std::format ("Invalid usage. Try {} path/to/binary/file\n",
+                                argv[0]);
+      return -1;
+    }
+
+  const std::string input_filename = argv[1];
   const std::string output_filename = "output.asm";
   Disassembler disassembler;
 
@@ -16,7 +26,8 @@ main (void)
     }
   catch (const std::runtime_error &e)
     {
-      throw e;
+      std::cerr << e.what ();
+      return -1;
     }
 
   disassembler.process_file ();
