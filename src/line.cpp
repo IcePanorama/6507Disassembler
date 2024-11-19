@@ -6,7 +6,7 @@
 #include <string>
 
 #define RAW_BYTES_STR_LEN (8)
-#define ASM_INSTRUCTION_STR_LEN (20)
+#define ASM_INSTRUCTION_STR_LEN (16)
 
 Line::Line (const uint16_t starting_addr, const Instruction &instruction,
             const std::vector<uint8_t> arguments)
