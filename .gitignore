@@ -1,5 +1,5 @@
 # Project specific
-6507Disassembler
+A2600Disassembler
 build/*
 .cache/*
 releases/*

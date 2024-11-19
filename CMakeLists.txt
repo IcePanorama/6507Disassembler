@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.28)
 
-project(6507Disassembler CXX)
+project(A2600Disassembler CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -81,6 +81,6 @@ add_dependencies(${PROJECT_NAME} format)
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCL_DIR})
 
 set_property(
-    TARGET 6507Disassembler
+    TARGET A2600Disassembler
     PROPERTY ADDITIONAL_CLEAN_FILES "${CMAKE_BINARY_DIR}/output.hexdump;"
 )
