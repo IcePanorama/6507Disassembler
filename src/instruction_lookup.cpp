@@ -30,6 +30,7 @@ InstructionLookupTable::get_table (void)
     { 0x69, Instruction ("ADC", 0x69, AM_IMMEDIATE, 1, 2) },
     { 0x65, Instruction ("ADC", 0x65, AM_ZERO_PAGE, 1, 3) },
     { 0x75, Instruction ("ADC", 0x75, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
+    { 0x6D, Instruction ("ADC", 0x6D, AM_ABSOLUTE, 2, 4) },
     { 0x7D, Instruction ("ADC", 0x7D, AM_ABSOLUTE_X_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
     { 0x79, Instruction ("ADC", 0x79, AM_ABSOLUTE_Y_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
     { 0x61, Instruction ("ADC", 0x61, AM_INDIRECT_X_INDEXED, 1, 6) },
@@ -39,13 +40,13 @@ InstructionLookupTable::get_table (void)
      *  ANC. AND oper + set C as ASL.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#ANC
      */
-    { 0x0B, Instruction ("AND", 0x0B, AM_IMMEDIATE, 1, 2) },
+    { 0x0B, Instruction ("ANC", 0x0B, AM_IMMEDIATE, 1, 2) },
 
     /**
      *  ANC (ANC2). AND oper + set C as ASL. Effectively the same as instr. 0B.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#ANC2
      */
-    { 0x2B, Instruction ("AND", 0x2B, AM_IMMEDIATE, 1, 2) },
+    { 0x2B, Instruction ("ANC2", 0x2B, AM_IMMEDIATE, 1, 2) },
 
     /**
      *  AND (bitwise AND with accumulator). Affects Flags: N Z.
@@ -55,9 +56,17 @@ InstructionLookupTable::get_table (void)
     { 0x25, Instruction ("AND", 0x25, AM_ZERO_PAGE, 1, 3) },
     { 0x35, Instruction ("AND", 0x35, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
     { 0x2D, Instruction ("AND", 0x2D, AM_ABSOLUTE, 2, 4) },
-    { 0x21, Instruction ("AND", 0x21, AM_INDIRECT_X_INDEXED, 1, 6) },
+    { 0x3D, Instruction ("AND", 0x3D, AM_ABSOLUTE_X_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
     { 0x39, Instruction ("AND", 0x39, AM_ABSOLUTE_Y_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
+    { 0x21, Instruction ("AND", 0x21, AM_INDIRECT_X_INDEXED, 1, 6) },
     { 0x31, Instruction ("AND", 0x31, AM_INDIRECT_Y_INDEXED, 1, 5) }, // +1 cycle if page boundary crossed
+
+    /**
+     *  AND oper + ROR. V-flag is set according to (A AND oper) + oper. The
+     *  carry is not set, but bit 7 (sign) is exchanged with the carry.
+     *  Affects flags: N Z C V.
+     */
+    { 0x6B, Instruction ("ARR", 0x6B, AM_IMMEDIATE, 1, 2) },
 
     /**
      *  ASL (Arithmetic Shift Left). Affects Flags: N Z C.
@@ -159,6 +168,8 @@ InstructionLookupTable::get_table (void)
     { 0x49, Instruction ("EOR", 0x49, AM_IMMEDIATE, 1, 2) },
     { 0x45, Instruction ("EOR", 0x45, AM_ZERO_PAGE, 1, 3) },
     { 0x55, Instruction ("EOR", 0x55, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
+    { 0x4D, Instruction ("EOR", 0x4D, AM_ABSOLUTE, 2, 4) },
+    { 0x5D, Instruction ("EOR", 0x5D, AM_ABSOLUTE_X_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
     { 0x59, Instruction ("EOR", 0x59, AM_ABSOLUTE_Y_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
     { 0x41, Instruction ("EOR", 0x41, AM_INDIRECT_X_INDEXED, 1, 6) },
     { 0x51, Instruction ("EOR", 0x51, AM_INDIRECT_Y_INDEXED, 1, 5) }, // +1 cycle if page boundary crossed
@@ -215,6 +226,7 @@ InstructionLookupTable::get_table (void)
      */
     { 0xE6, Instruction ("INC", 0xE6, AM_ZERO_PAGE, 1, 5) },
     { 0xF6, Instruction ("INC", 0xF6, AM_ZERO_PAGE_X_INDEXED, 1, 6) },
+    { 0xEE, Instruction ("INC", 0xEE, AM_ABSOLUTE, 2, 6) },
     { 0xFE, Instruction ("INC", 0xFE, AM_ABSOLUTE_X_INDEXED, 2, 7) },
 
     /**
@@ -272,14 +284,12 @@ InstructionLookupTable::get_table (void)
     { 0xBB, Instruction ("LAS", 0xBB, AM_ABSOLUTE_Y_INDEXED, 2, 4) },
 
     /**
-     *  LAX
-     *
-     *  LDA oper + LDX oper.
-     *
+     *  LAX. LDA oper + LDX oper.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#LAX
      */
     { 0xA7, Instruction ("LAX", 0xA7, AM_ZERO_PAGE, 1, 3) },
     { 0xB7, Instruction ("LAX", 0xB7, AM_ZERO_PAGE_Y_INDEXED, 1, 4) },
+    { 0xAF, Instruction ("LAX", 0xAF, AM_ABSOLUTE, 2, 4) },
     { 0xBF, Instruction ("LAX", 0xBF, AM_ABSOLUTE_Y_INDEXED, 2, 4) },
     { 0xB3, Instruction ("LAX", 0xB3, AM_INDIRECT_Y_INDEXED, 1, 5) },
 
@@ -302,6 +312,8 @@ InstructionLookupTable::get_table (void)
      */
     { 0xA2, Instruction ("LDX", 0xA2, AM_IMMEDIATE, 1, 2) },
     { 0xA6, Instruction ("LDX", 0xA6, AM_ZERO_PAGE, 1, 3) },
+    { 0xB6, Instruction ("LDX", 0xB6, AM_ZERO_PAGE_Y_INDEXED, 1, 4) },
+    { 0xAE, Instruction ("LDX", 0xAE, AM_ABSOLUTE, 2, 4) }, // +1 cycle if page boundary crossed.
     { 0xBE, Instruction ("LDX", 0xBE, AM_ABSOLUTE_Y_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed.
 
     /**
@@ -431,6 +443,7 @@ InstructionLookupTable::get_table (void)
      *
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#SAX
      */
+    { 0x87, Instruction ("SAX", 0x87, AM_ZERO_PAGE, 1, 3) },
     { 0x97, Instruction ("SAX", 0x97, AM_ZERO_PAGE_Y_INDEXED, 1, 4) },
 
     /**
@@ -501,6 +514,7 @@ InstructionLookupTable::get_table (void)
      */
     { 0x47, Instruction ("SRE", 0x47, AM_ZERO_PAGE, 1, 5) },
     { 0x57, Instruction ("SRE", 0x57, AM_ZERO_PAGE_X_INDEXED, 1, 6) },
+    { 0x4F, Instruction ("SRE", 0x4F, AM_ABSOLUTE, 2, 6) },
     { 0x5F, Instruction ("SRE", 0x5F, AM_ABSOLUTE_X_INDEXED, 2, 7) },
     { 0x43, Instruction ("SRE", 0x43, AM_INDIRECT_X_INDEXED, 1, 8) },
     { 0x53, Instruction ("SRE", 0x53, AM_INDIRECT_Y_INDEXED, 1, 8) },
@@ -511,6 +525,8 @@ InstructionLookupTable::get_table (void)
      */
     { 0x85, Instruction ("STA", 0x85, AM_ZERO_PAGE, 1, 3) },
     { 0x95, Instruction ("STA", 0x95, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
+    { 0x8D, Instruction ("STA", 0x8D, AM_ABSOLUTE, 2, 4) },
+    { 0x9D, Instruction ("STA", 0x9D, AM_ABSOLUTE_X_INDEXED, 2, 5) },
     { 0x99, Instruction ("STA", 0x99, AM_ABSOLUTE_Y_INDEXED, 2, 5) },
     { 0x81, Instruction ("STA", 0x81, AM_INDIRECT_X_INDEXED, 1, 6) },
     { 0x91, Instruction ("STA", 0x91, AM_INDIRECT_Y_INDEXED, 1, 6) },
@@ -535,6 +551,7 @@ InstructionLookupTable::get_table (void)
      *  @see: http://www.6502.org/tutorials/6502opcodes.html#STX
      */
     { 0x86, Instruction ("STX", 0x86, AM_ZERO_PAGE, 1, 3) },
+    { 0x96, Instruction ("STX", 0x96, AM_ZERO_PAGE_Y_INDEXED, 1, 3) },
     { 0x8E, Instruction ("STX", 0x8E, AM_ABSOLUTE, 2, 4) },
 
     /**
@@ -542,6 +559,7 @@ InstructionLookupTable::get_table (void)
      *  @see: http://www.6502.org/tutorials/6502opcodes.html#STY
      */
     { 0x84, Instruction ("STY", 0x84, AM_ZERO_PAGE, 1, 3) },
+    { 0x94, Instruction ("STY", 0x94, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
     { 0x8C, Instruction ("STY", 0x8C, AM_ABSOLUTE, 2, 4) },
   };
   return table;

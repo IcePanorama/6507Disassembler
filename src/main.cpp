@@ -43,14 +43,13 @@ main (int argc, char **argv)
   try
     {
       disassembler.initialize (input_filename, output_filename);
+      disassembler.process_file ();
     }
   catch (const std::runtime_error &e)
     {
       std::cerr << e.what ();
       return -1;
     }
-
-  disassembler.process_file ();
 
   return 0;
 }
