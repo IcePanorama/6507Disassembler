@@ -18,6 +18,7 @@ class Disassembler
   // an incomplete line, likely part of some data
   std::vector<uint8_t> leftover_bytes;
 
+  void create_file_header (const std::string &input_filename);
   void process_instruction (const Instruction &i, uint16_t location);
   void export_program (void);
 

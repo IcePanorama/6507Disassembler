@@ -34,6 +34,7 @@ set(INCL_FILES
     "${INCL_DIR}/instruction_lookup.hpp"
     "${INCL_DIR}/label.hpp"
     "${INCL_DIR}/line.hpp"
+    "${INCL_DIR}/time.hpp"
     "${INCL_DIR}/zero_page_lookup.hpp"
 )
 
@@ -47,6 +48,7 @@ set(SRC_FILES
     "${SRC_DIR}/label.cpp"
     "${SRC_DIR}/line.cpp"
     "${SRC_DIR}/main.cpp"
+    "${SRC_DIR}/time.cpp"
     "${SRC_DIR}/zero_page_lookup.cpp"
 )
 

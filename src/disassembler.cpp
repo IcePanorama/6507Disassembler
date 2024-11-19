@@ -1,5 +1,6 @@
 #include "disassembler.hpp"
 #include "instruction_lookup.hpp"
+#include "time.hpp"
 
 #include <cstdint>
 #include <format>
@@ -21,8 +22,19 @@ Disassembler::initialize (const std::string &input_filename,
     throw std::runtime_error (
         std::format ("Error opening output file, {}.\n", output_filename));
 
-  const std::string file_header = std::format ("; {}\n", input_filename);
-  this->output_fptr.write (file_header.c_str (), file_header.length ());
+  this->create_file_header (input_filename);
+}
+
+void
+Disassembler::create_file_header (const std::string &input_filename)
+{
+  constexpr const char *header_format
+      = ";  Original filename: {}\n;  Generated {}\n;  Created using "
+        "A2600Disassembler <IcePanorama/A2600Disassembler>\n";
+  const std::string header
+      = std::format (header_format, input_filename, get_current_time ());
+
+  this->output_fptr.write (header.c_str (), header.length ());
 }
 
 void
