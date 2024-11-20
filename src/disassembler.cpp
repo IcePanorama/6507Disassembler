@@ -44,7 +44,7 @@ void
 Disassembler::create_file_header (const std::string &input_filename)
 {
   /*
-   *  `std::string` can't be a constexpr, causes CC to complain. Using a
+   *  `std::string` can't be a constexpr--causes CC to complain. Using a
    *  cstring as an easy fix.
    */
   constexpr const char *header_format
@@ -81,13 +81,15 @@ Disassembler::process_instruction (const Instruction &i, uint16_t location)
   std::vector<uint8_t> arguments (i.get_num_arguments ());
   input_fptr.read (reinterpret_cast<char *> (arguments.data ()),
                    arguments.size ());
+
+  arguments.resize (static_cast<size_t> (input_fptr.gcount ()));
   if (input_fptr.eof ())
     {
       leftover_bytes.push_back (i.get_opcode ());
+      for (const uint8_t &b : arguments)
+        leftover_bytes.push_back (b);
       return;
     }
-
-  arguments.resize (static_cast<size_t> (input_fptr.gcount ()));
 
   lines.push_back (Line (location, i, arguments));
 }
@@ -101,7 +103,6 @@ Disassembler::export_program (void)
        *  Line starting addr is in big endian form, whereas the label lookup
        *  table needs it in little endian form, hence this weird
        *  hackjob/conversion going on.
-       *  TODO: Probably should get fixed eventually.
        */
       uint16_t le_start_addr = l.get_starting_addr ();
       le_start_addr = ((le_start_addr & 0xFF) << 0x8)
@@ -119,12 +120,19 @@ Disassembler::export_program (void)
       this->output_fptr.write (curr_output.c_str (), curr_output.length ());
     }
 
-  // Very hack-y, but it works
-  std::string leftovers = std::format (
-      "  {:04X}  ", this->lines.back ().get_starting_addr ()
-                        + this->lines.back ().get_instruction_length ());
+  this->export_leftover_bytes ();
+}
+
+void
+Disassembler::export_leftover_bytes (void)
+{
+  const uint16_t addr = this->lines.back ().get_starting_addr ()
+                        + this->lines.back ().get_instruction_length ();
+
+  std::string leftovers = std::format ("  {:04X}  ", addr);
   for (const uint8_t &b : this->leftover_bytes)
     leftovers += std::format ("{:02X} ", b);
+
   if (!leftovers.empty ())
     leftovers.pop_back ();
 

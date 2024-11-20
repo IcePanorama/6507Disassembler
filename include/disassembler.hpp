@@ -36,6 +36,7 @@ class Disassembler
   void create_file_header (const std::string &input_filename);
   void process_instruction (const Instruction &i, uint16_t location);
   void export_program (void);
+  void export_leftover_bytes (void);
 
 public:
   Disassembler (void) = default;
