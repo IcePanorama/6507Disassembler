@@ -17,8 +17,7 @@
 #include "addressing_mode.hpp"
 #include "instruction.hpp"
 
-/* clang-format off */
-const std::unordered_map<uint8_t, Instruction> &
+/* clang-format off */ const std::unordered_map<uint8_t, Instruction> &
 InstructionLookupTable::get_table (void)
 {
   /** @see: http://www.6502.org/tutorials/6502opcodes.html */
@@ -38,6 +37,7 @@ InstructionLookupTable::get_table (void)
 
     /**
      *  ALR (ASR). AND oper + LSR. Affects flags: N Z C.
+     *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#ALR
      */
     { 0x4B, Instruction ("ALR", 0x4B, AM_IMMEDIATE, 1, 2) },
 
@@ -73,6 +73,7 @@ InstructionLookupTable::get_table (void)
      *  and maybe other factors, as well. In order to eliminate these
      *  uncertaincies from the equation, use either 0 as the operand or a
      *  value of $FF in the accumulator. Affects flags: N Z.
+     *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#ANE
      */
     { 0x8B, Instruction ("ANE", 0x8B, AM_IMMEDIATE, 1, 2) },
 
@@ -80,6 +81,7 @@ InstructionLookupTable::get_table (void)
      *  ARR. AND oper + ROR. V-flag is set according to (A AND oper) + oper.
      *  The carry is not set, but bit 7 (sign) is exchanged with the carry.
      *  Affects flags: N Z C V.
+     *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#ARR
      */
     { 0x6B, Instruction ("ARR", 0x6B, AM_IMMEDIATE, 1, 2) },
 
@@ -101,14 +103,11 @@ InstructionLookupTable::get_table (void)
     { 0x2C, Instruction ("BIT", 0x2C, AM_ABSOLUTE, 2, 4) },
 
     /**
-     *  Branch Instructions
-     *
-     *  All branches are relative mode and have a length of two bytes. Syntax
-     *  is "Bxx Displacement" or (better) "Bxx Label". Branches are dependant
-     *  on the status of the flag bits when the op code is encountered. A
-     *  branch not taken requires two machine cycles. Add one if the branch is
-     *  taken and add one more if the branch crosses a page boundary. 
-     *
+     *  Branch Instructions. Syntax is "Bxx Displacement" or (better)
+     *  "Bxx Label". Branches are dependant on the status of the flag bits when
+     *  the op code is encountered. A branch not taken requires two machine
+     *  cycles. Add one if the branch is taken and add one more if the branch
+     *  crosses a page boundary.
      *  @see: http://www.6502.org/tutorials/6502opcodes.html#BPL
      */
     { 0x10, Instruction ("BPL", 0x10, AM_RELATIVE, 1, 2) },
@@ -156,11 +155,8 @@ InstructionLookupTable::get_table (void)
     { 0xCC, Instruction ("CPY", 0xCC, AM_ABSOLUTE, 2, 4) },
 
     /**
-     *  DCP (DCM)
-     *
-     *  DEC oper + CMP oper. Decrements the operand and then compares the
-     *  result to the accumulator.
-     *
+     *  DCP (DCM). DEC oper + CMP oper. Decrements the operand and then
+     *  compares the result to the accumulator.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#DCP
      */
     { 0xC7, Instruction ("DCP", 0xC7, AM_ZERO_PAGE, 1, 5) },
@@ -205,10 +201,8 @@ InstructionLookupTable::get_table (void)
     { 0xF8, Instruction ("SED", 0xF8, AM_IMPLIED, 0, 2) },
 
     /**
-     *  Undocumented NOPs (including DOP, TOP)
-     *
-     *  Instructions effecting in 'no operations' in various address modes.
-     *  Operands are ignored.
+     *  Undocumented NOPs (including DOP, TOP). Instructions effecting in
+     *  'no operations' in various address modes. Operands are ignored.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#NOPs
      */
     { 0x1A, Instruction ("NOP", 0x1A, AM_IMPLIED, 0, 2) },
@@ -249,10 +243,7 @@ InstructionLookupTable::get_table (void)
     { 0xFE, Instruction ("INC", 0xFE, AM_ABSOLUTE_X_INDEXED, 2, 7) },
 
     /**
-     *  ISC (ISB, INS)
-     *
-     *  INC oper + SBC oper.
-     *
+     *  ISC (ISB, INS). INC oper + SBC oper.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#ISC
      */
     { 0xE7, Instruction ("ISC", 0xE7, AM_ZERO_PAGE, 1, 5) },
@@ -264,12 +255,10 @@ InstructionLookupTable::get_table (void)
     { 0xF3, Instruction ("ISC", 0xF3, AM_INDIRECT_Y_INDEXED, 1, 8) },
 
     /**
-     *  JAM (KIL, HLT)
-     *
-     *  These instructions freeze the CPU. The processor will be trapped
-     *  infinitely in T1 phase with $FF on the data bus. — Reset required.
+     *  JAM (KIL, HLT). These instructions freeze the CPU. The processor will
+     *  be trapped infinitely in T1 phase with $FF on the data bus. — Reset
+     *  required.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#JAM
-     *  TODO: figure out suitable value for these instructions.
      */
     { 0x02, Instruction ("JAM", 0x02, AM_IMPLIED, 0, 0) },
     { 0x12, Instruction ("JAM", 0x12, AM_IMPLIED, 0, 0) },
@@ -285,7 +274,7 @@ InstructionLookupTable::get_table (void)
     { 0xF2, Instruction ("JAM", 0xF2, AM_IMPLIED, 0, 0) },
 
     /**
-     *  JMP (JuMP). Affects Flags: none
+     *  JMP (JuMP). Affects Flags: none.
      *  @see: http://www.6502.org/tutorials/6502opcodes.html#JMP
      */
     { 0x4C, Instruction ("JMP", 0x4C, AM_ABSOLUTE, 2, 3) },
@@ -358,7 +347,7 @@ InstructionLookupTable::get_table (void)
 
     /**
      *  LXA (LAX immediate). Store * AND oper in A and X. Highly unstable,
-     *  involves a 'magic' constant
+     *  involves a 'magic' constant.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#LXA
      */
     { 0xAB, Instruction ("LXA", 0xAB, AM_IMMEDIATE, 1, 2) },
@@ -383,11 +372,8 @@ InstructionLookupTable::get_table (void)
     { 0x11, Instruction ("ORA", 0x11, AM_INDIRECT_Y_INDEXED, 1, 5) }, // +1 cycle if page boundary crossed.
 
     /**
-     *  Register Instructions
-     *
-     *  These instructions are implied mode, have a length of one byte and
-     *  require two machine cycles. Affect Flags: N Z
-     *
+     *  Register Instructions. These instructions are implied mode, have a
+     *  length of one byte and require two machine cycles. Affect Flags: N Z.
      *  @see: http://www.6502.org/tutorials/6502opcodes.html#TAX
      */
     { 0xAA, Instruction ("TAX", 0xAA, AM_IMPLIED, 0, 2) },
@@ -432,10 +418,7 @@ InstructionLookupTable::get_table (void)
     { 0x33, Instruction ("RLA", 0x33, AM_INDIRECT_Y_INDEXED, 1, 8) },
 
     /**
-     *  RRA
-     *
-     *  ROR oper + ADC oper.
-     *
+     *  RRA. ROR oper + ADC oper.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#RRA
      */
     { 0x67, Instruction ("RRA", 0x67, AM_ZERO_PAGE, 1, 5) },
@@ -450,7 +433,7 @@ InstructionLookupTable::get_table (void)
      *  RTI (ReTurn from Interrupt). Affects Flags: all.
      *  @see: http://www.6502.org/tutorials/6502opcodes.html#RTI
      */
-    { 0x40, Instruction ("RTS", 0x40, AM_IMPLIED, 0, 6) },
+    { 0x40, Instruction ("RTI", 0x40, AM_IMPLIED, 0, 6) },
 
     /**
      *  RTS (ReTurn from Subroutine). Affects Flags: none.
@@ -459,11 +442,8 @@ InstructionLookupTable::get_table (void)
     { 0x60, Instruction ("RTS", 0x60, AM_IMPLIED, 0, 6) },
 
     /**
-     *  SAX (AXS, AAX)
-     *
-     *  A and X are put on the bus at the same time (resulting effectively in
-     *  an AND operation) and stored in M.
-     *
+     *  SAX (AXS, AAX). A and X are put on the bus at the same time
+     *  (resulting effectively in an AND operation) and stored in M.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#SAX
      */
     { 0x87, Instruction ("SAX", 0x87, AM_ZERO_PAGE, 1, 3) },
@@ -481,36 +461,28 @@ InstructionLookupTable::get_table (void)
     { 0xFD, Instruction ("SBC", 0xFD, AM_ABSOLUTE_X_INDEXED, 2, 4) }, // +1 cycle if page boundary is crossed.
     { 0xF9, Instruction ("SBC", 0xFD, AM_ABSOLUTE_Y_INDEXED, 2, 4) }, // +1 cycle if page boundary is crossed.
     { 0xE1, Instruction ("SBC", 0xE1, AM_INDIRECT_X_INDEXED, 1, 6) },
-    ////{ 0xF1, Instruction ("SBC", 0xF1, AM_INDIRECT_Y_INDEXED, 1, 5) }, // +1 cycle if page boundary is crossed.
 
     /**
-     *  SBX (AXS, SAX)
-     *
-     *  CMP and DEX at once, sets flags like CMP.
-     *
+     *  SBX (AXS, SAX). CMP and DEX at once, sets flags like CMP.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#SBX
      */
     { 0xCB, Instruction ("SBX", 0xCB, AM_IMMEDIATE, 1, 2) },
 
     /**
-     *  SHA (AHX, AXA)
-     *
-     *  Stores A AND X AND (high-byte of addr. + 1) at addr. unstable:
-     *  sometimes 'AND (H+1)' is dropped, page boundary crossings may not work
-     *  (with the high-byte of the value used as the high-byte of the address).
-     *
-     *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#SLO
+     *  SHA (AHX, AXA). Stores A AND X AND (high-byte of addr. + 1) at addr.
+     *  unstable: sometimes 'AND (H+1)' is dropped, page boundary crossings may
+     *  not work (with the high-byte of the value used as the high-byte of the
+     *  address).
+     *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#SHA
      */
     { 0x9F, Instruction ("SHA", 0x9F, AM_ABSOLUTE_Y_INDEXED, 2, 5) },
     { 0x93, Instruction ("SHA", 0x93, AM_INDIRECT_Y_INDEXED, 1, 6) },
 
     /**
-     *  SHX (A11, SXA, XAS)
-     *
-     *  Stores X AND (high-byte of addr. + 1) at addr. unstable: sometimes
-     *  'AND (H+1)' is dropped, page boundary crossings may not work (with the
-     *  high-byte of the value used as the high-byte of the address).
-     *
+     *  SHX (A11, SXA, XAS). Stores X AND (high-byte of addr. + 1) at addr.
+     *  unstable: sometimes 'AND (H+1)' is dropped, page boundary crossings may
+     *  not work (with the high-byte of the value used as the high-byte of the
+     *  address).
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#SHX
      */
     { 0x9E, Instruction ("SHX", 0x9E, AM_ABSOLUTE_Y_INDEXED, 2, 5) },
@@ -524,10 +496,7 @@ InstructionLookupTable::get_table (void)
     { 0x9C, Instruction ("SHY", 0x9C, AM_ABSOLUTE_X_INDEXED, 2, 5) },
 
     /**
-     *  SLO (ASO)
-     *
-     *  ASL oper + ORA oper.
-     *
+     *  SLO (ASO). ASL oper + ORA oper.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#SLO
      */
     { 0x07, Instruction ("SLO", 0x07, AM_ZERO_PAGE, 1, 5) },
@@ -539,10 +508,7 @@ InstructionLookupTable::get_table (void)
     { 0x13, Instruction ("SLO", 0x13, AM_INDIRECT_Y_INDEXED, 1, 8) },
 
     /**
-     *  SRE (LSE)
-     *
-     *  LSR oper + EOR oper.
-     *
+     *  SRE (LSE). LSR oper + EOR oper.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#SRE
      */
     { 0x47, Instruction ("SRE", 0x47, AM_ZERO_PAGE, 1, 5) },
@@ -566,11 +532,8 @@ InstructionLookupTable::get_table (void)
     { 0x91, Instruction ("STA", 0x91, AM_INDIRECT_Y_INDEXED, 1, 6) },
 
     /**
-     *  Stack Instructions
-     *
-     * These instructions are implied mode, have a length of one byte and
-     * require machine cycles as indicated.
-     *
+     *  Stack Instructions. These instructions are implied mode, have a length
+     *  of one byte and require machine cycles as indicated.
      *  @see: http://www.6502.org/tutorials/6502opcodes.html#TXS
      */
     { 0x9A, Instruction ("TXS", 0x9A, AM_IMPLIED, 0, 2) },
