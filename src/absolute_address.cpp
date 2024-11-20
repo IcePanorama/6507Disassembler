@@ -42,3 +42,9 @@ AbsoluteAddress::get_label (void) const
 {
   return this->label;
 }
+
+uint16_t
+AbsoluteAddress::get_raw_address (void) const
+{
+  return this->raw_address_;
+}

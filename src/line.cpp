@@ -127,8 +127,11 @@ Line::format_absolute_addr_arguments (void) const
   std::string output = "";
 
   if (this->abs_address->get_label ().get_num_usages () == 1)
-    output.append ("$");
-  output.append (this->abs_address->get_label ().to_string ());
+    output.append (
+        std::format ("${:04X}", this->abs_address->get_raw_address ()));
+  else
+    output.append (this->abs_address->get_label ().to_string ());
+
   return output;
 }
 

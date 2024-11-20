@@ -34,7 +34,7 @@ class Label
 public:
   /** Returns existing label or creates new one. */
   static Label &get_label (uint16_t address);
-  /** Returns existing label. */
+  /** Returns existing label. Used exclusively for line labels, not args. */
   static std::optional<Label> find_label (uint16_t address);
 
   std::string to_string (void) const;

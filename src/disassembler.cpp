@@ -108,6 +108,7 @@ Disassembler::export_program (void)
       le_start_addr = ((le_start_addr & 0xFF) << 0x8)
                       | ((le_start_addr & 0xFF00) >> 0x8);
 
+      /* Add label to the current line if 2+ other lines points here. */
       std::optional<Label> label = Label::find_label (le_start_addr);
       if (label.has_value () && label->get_num_usages () > 1)
         {

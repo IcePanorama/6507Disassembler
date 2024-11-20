@@ -28,6 +28,8 @@ class AbsoluteAddress
 
 public:
   AbsoluteAddress (uint16_t raw_address);
+
+  uint16_t get_raw_address (void) const;
   const Label &get_label (void) const;
 };
 
