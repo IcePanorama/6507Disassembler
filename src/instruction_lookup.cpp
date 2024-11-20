@@ -216,6 +216,7 @@ InstructionLookupTable::get_table (void)
     { 0x5A, Instruction ("NOP", 0x5A, AM_IMPLIED, 0, 2) },
     { 0x7A, Instruction ("NOP", 0x7A, AM_IMPLIED, 0, 2) },
     { 0xDA, Instruction ("NOP", 0xDA, AM_IMPLIED, 0, 2) },
+    { 0xFA, Instruction ("NOP", 0xFA, AM_IMPLIED, 0, 2) },
     { 0x80, Instruction ("NOP", 0x80, AM_IMMEDIATE, 1, 2) },
     { 0x82, Instruction ("NOP", 0x82, AM_IMMEDIATE, 1, 2) },
     { 0x89, Instruction ("NOP", 0x89, AM_IMMEDIATE, 1, 2) },
@@ -280,6 +281,7 @@ InstructionLookupTable::get_table (void)
     { 0x72, Instruction ("JAM", 0x72, AM_IMPLIED, 0, 0) },
     { 0x92, Instruction ("JAM", 0x92, AM_IMPLIED, 0, 0) },
     { 0xB2, Instruction ("JAM", 0xB2, AM_IMPLIED, 0, 0) },
+    { 0xD2, Instruction ("JAM", 0xD2, AM_IMPLIED, 0, 0) },
     { 0xF2, Instruction ("JAM", 0xF2, AM_IMPLIED, 0, 0) },
 
     /**
