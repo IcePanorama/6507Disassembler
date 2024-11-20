@@ -8,6 +8,7 @@ vgcore.*
 *.asm
 *.txt
 *.bin
+!example_output.asm
 
 # atari 2600 rom files
 *.a26
