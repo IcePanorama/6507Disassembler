@@ -23,8 +23,8 @@
 
 class Instruction
 {
-  std::string asm_instruction_; // the human-readable form.
-  uint8_t opcode_; // the hex value which represents the instruction
+  std::string asm_instruction_;
+  uint8_t opcode_;
   AddressingMode_e addr_mode_;
   uint8_t num_arguments_;
   uint8_t num_cycles_; // num cycles it takes to complete

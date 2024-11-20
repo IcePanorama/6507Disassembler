@@ -25,8 +25,6 @@
 #include <string>
 #include <vector>
 
-#define MAX_NUM_ARGUMENTS (2)
-
 class Line
 {
   const uint16_t starting_addr_;
