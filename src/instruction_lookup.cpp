@@ -74,6 +74,7 @@ InstructionLookupTable::get_table (void)
      */
     { 0x0A, Instruction ("ASL", 0x0A, AM_ACCUMULATOR, 0, 2) },
     { 0x06, Instruction ("ASL", 0x06, AM_ZERO_PAGE, 1, 5) },
+    { 0x16, Instruction ("ASL", 0x16, AM_ZERO_PAGE_X_INDEXED, 1, 6) },
     { 0x0E, Instruction ("ASL", 0x0E, AM_ABSOLUTE, 2, 6) },
     { 0x1E, Instruction ("ASL", 0x1E, AM_ABSOLUTE_X_INDEXED, 2, 7) },
 
@@ -117,6 +118,7 @@ InstructionLookupTable::get_table (void)
     { 0xC9, Instruction ("CMP", 0xC9, AM_IMMEDIATE, 1, 2) },
     { 0xC5, Instruction ("CMP", 0xC5, AM_ZERO_PAGE, 1, 3) },
     { 0xD5, Instruction ("CMP", 0xD5, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
+    { 0xCD, Instruction ("CMP", 0xCD, AM_ABSOLUTE, 2, 4) },
     { 0xDD, Instruction ("CMP", 0xDD, AM_ABSOLUTE_X_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
     { 0xD9, Instruction ("CMP", 0xD9, AM_ABSOLUTE_Y_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed
     { 0xC1, Instruction ("CMP", 0xC1, AM_INDIRECT_X_INDEXED, 1, 6) },
@@ -291,6 +293,7 @@ InstructionLookupTable::get_table (void)
     { 0xB7, Instruction ("LAX", 0xB7, AM_ZERO_PAGE_Y_INDEXED, 1, 4) },
     { 0xAF, Instruction ("LAX", 0xAF, AM_ABSOLUTE, 2, 4) },
     { 0xBF, Instruction ("LAX", 0xBF, AM_ABSOLUTE_Y_INDEXED, 2, 4) },
+    { 0xA3, Instruction ("LAX", 0xA3, AM_INDIRECT_X_INDEXED, 1, 6) },
     { 0xB3, Instruction ("LAX", 0xB3, AM_INDIRECT_Y_INDEXED, 1, 5) },
 
     /**
@@ -405,6 +408,7 @@ InstructionLookupTable::get_table (void)
     { 0x37, Instruction ("RLA", 0x37, AM_ZERO_PAGE_X_INDEXED, 1, 6) },
     { 0x2F, Instruction ("RLA", 0x2F, AM_ABSOLUTE, 2, 6) },
     { 0x3F, Instruction ("RLA", 0x3F, AM_ABSOLUTE_X_INDEXED, 2, 7) },
+    { 0x3B, Instruction ("RLA", 0x3B, AM_ABSOLUTE_Y_INDEXED, 2, 7) },
     { 0x23, Instruction ("RLA", 0x23, AM_INDIRECT_X_INDEXED, 1, 8) },
     { 0x33, Instruction ("RLA", 0x33, AM_INDIRECT_Y_INDEXED, 1, 8) },
 
@@ -445,6 +449,7 @@ InstructionLookupTable::get_table (void)
      */
     { 0x87, Instruction ("SAX", 0x87, AM_ZERO_PAGE, 1, 3) },
     { 0x97, Instruction ("SAX", 0x97, AM_ZERO_PAGE_Y_INDEXED, 1, 4) },
+    { 0x8F, Instruction ("SAX", 0x8F, AM_ABSOLUTE, 2, 4) },
 
     /**
      *  SBC (SuBtract with Carry). Affects Flags: N V Z C.
@@ -477,6 +482,7 @@ InstructionLookupTable::get_table (void)
      *
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#SLO
      */
+    { 0x9F, Instruction ("SHA", 0x9F, AM_ABSOLUTE_Y_INDEXED, 2, 5) },
     { 0x93, Instruction ("SHA", 0x93, AM_INDIRECT_Y_INDEXED, 1, 6) },
 
     /**
