@@ -516,6 +516,14 @@ InstructionLookupTable::get_table (void)
     { 0x9E, Instruction ("SHX", 0x9E, AM_ABSOLUTE_Y_INDEXED, 2, 5) },
 
     /**
+     *  SHY (A11, SYA, SAY). Stores Y AND (high-byte of addr. + 1) at addr.
+     *  unstable: sometimes 'AND (H+1)' is dropped, page boundary crossings may
+     *  not work (with the high-byte of the value used as the high-byte of the
+     *  address). Affects flags: none.
+     */
+    { 0x9C, Instruction ("SHY", 0x9C, AM_ABSOLUTE_X_INDEXED, 2, 5) },
+
+    /**
      *  SLO (ASO)
      *
      *  ASL oper + ORA oper.
@@ -541,6 +549,7 @@ InstructionLookupTable::get_table (void)
     { 0x57, Instruction ("SRE", 0x57, AM_ZERO_PAGE_X_INDEXED, 1, 6) },
     { 0x4F, Instruction ("SRE", 0x4F, AM_ABSOLUTE, 2, 6) },
     { 0x5F, Instruction ("SRE", 0x5F, AM_ABSOLUTE_X_INDEXED, 2, 7) },
+    { 0x5B, Instruction ("SRE", 0x5B, AM_ABSOLUTE_Y_INDEXED, 2, 7) },
     { 0x43, Instruction ("SRE", 0x43, AM_INDIRECT_X_INDEXED, 1, 8) },
     { 0x53, Instruction ("SRE", 0x53, AM_INDIRECT_Y_INDEXED, 1, 8) },
 

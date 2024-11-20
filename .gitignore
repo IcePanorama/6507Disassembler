@@ -7,6 +7,7 @@ releases/*
 vgcore.*
 *.asm
 *.txt
+*.bin
 
 # atari 2600 rom files
 *.a26
