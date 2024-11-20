@@ -39,6 +39,10 @@ Label::get_label (uint16_t address)
 std::string
 Label::to_string (void) const
 {
+  /*
+   *  FIXME: shouldn't this return the raw address and not the true address if
+   *  its num_usages <= 1?.
+   */
   return this->num_usages > 1 ? this->name
                               : std::format ("{:04X}", this->address_);
 }

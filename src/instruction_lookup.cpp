@@ -37,6 +37,11 @@ InstructionLookupTable::get_table (void)
     { 0x71, Instruction ("ADC", 0x71, AM_INDIRECT_Y_INDEXED, 1, 5) }, // +1 cycle if page boundary crossed
 
     /**
+     *  ALR (ASR). AND oper + LSR. Affects flags: N Z C.
+     */
+    { 0x4B, Instruction ("ALR", 0x4B, AM_IMMEDIATE, 1, 2) },
+
+    /**
      *  ANC. AND oper + set C as ASL.
      *  @see: https://www.masswerk.at/6502/6502_instruction_set.html#ANC
      */
@@ -62,8 +67,18 @@ InstructionLookupTable::get_table (void)
     { 0x31, Instruction ("AND", 0x31, AM_INDIRECT_Y_INDEXED, 1, 5) }, // +1 cycle if page boundary crossed
 
     /**
-     *  AND oper + ROR. V-flag is set according to (A AND oper) + oper. The
-     *  carry is not set, but bit 7 (sign) is exchanged with the carry.
+     *  ANE (XAA). * OR X + AND oper. A base value in A is determined based on
+     *  the contents of A and a constant, which may be typically $00, $ff, $ee,
+     *  etc. The value of this constant depends on temerature, the chip series,
+     *  and maybe other factors, as well. In order to eliminate these
+     *  uncertaincies from the equation, use either 0 as the operand or a
+     *  value of $FF in the accumulator. Affects flags: N Z.
+     */
+    { 0x8B, Instruction ("ANE", 0x8B, AM_IMMEDIATE, 1, 2) },
+
+    /**
+     *  ARR. AND oper + ROR. V-flag is set according to (A AND oper) + oper.
+     *  The carry is not set, but bit 7 (sign) is exchanged with the carry.
      *  Affects flags: N Z C V.
      */
     { 0x6B, Instruction ("ARR", 0x6B, AM_IMMEDIATE, 1, 2) },
@@ -161,6 +176,7 @@ InstructionLookupTable::get_table (void)
      */
     { 0xC6, Instruction ("DEC", 0xC6, AM_ZERO_PAGE, 1, 5) },
     { 0xD6, Instruction ("DEC", 0xD6, AM_ZERO_PAGE_X_INDEXED, 1, 6) },
+    { 0xCE, Instruction ("DEC", 0xCE, AM_ABSOLUTE, 2, 6) },
     { 0xDE, Instruction ("DEC", 0xDE, AM_ABSOLUTE_X_INDEXED, 2, 7) },
 
     /**
@@ -326,6 +342,7 @@ InstructionLookupTable::get_table (void)
     { 0xA0, Instruction ("LDY", 0xA0, AM_IMMEDIATE, 1, 2) },
     { 0xA4, Instruction ("LDY", 0xA4, AM_ZERO_PAGE, 1, 3) },
     { 0xB4, Instruction ("LDY", 0xB4, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
+    { 0xAC, Instruction ("LDY", 0xAC, AM_ABSOLUTE, 2, 4) },
     { 0xBC, Instruction ("LDY", 0xBC, AM_ABSOLUTE_X_INDEXED, 2, 4) }, // +1 cycle if page boundary crossed.
 
     /**
@@ -567,6 +584,14 @@ InstructionLookupTable::get_table (void)
     { 0x84, Instruction ("STY", 0x84, AM_ZERO_PAGE, 1, 3) },
     { 0x94, Instruction ("STY", 0x94, AM_ZERO_PAGE_X_INDEXED, 1, 4) },
     { 0x8C, Instruction ("STY", 0x8C, AM_ABSOLUTE, 2, 4) },
+
+    /**
+     *  TAS (XAS, SHS). Puts A AND X in SP and stores A AND X AND
+     *  (high-byte of addr. + 1) at addr. unstable: sometimes 'AND (H+1)' is
+     *  dropped, page boundary crossings may not work (with the high-byte of
+     *  the value used as the high-byte of the address). Affects flags: none.
+     */
+    { 0x9B, Instruction ("TAS", 0x9B, AM_ABSOLUTE_Y_INDEXED, 2, 5) },
   };
   return table;
 }

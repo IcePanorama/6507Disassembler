@@ -204,19 +204,5 @@ Line::create_comments_for_zero_page_addressing (const uint8_t &arg) const
   return "";
 }
 
-/*
-const Instruction &
-Line::get_instruction (void) const
-{
-  return this->instruction_;
-}
-
-std::optional<AbsoluteAddress>
-Line::get_absolute_address (void) const
-{
-  return this->abs_address;
-}
-*/
-
 #undef RAW_BYTES_STR_LEN
 #undef ASM_INSTRUCTION_STR_LEN
