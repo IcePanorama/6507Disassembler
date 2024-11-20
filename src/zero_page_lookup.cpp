@@ -58,7 +58,7 @@ ZeroPageLookupTable::get_table (void)
     {0x20, "HMP0 (W)"},
     {0x0A, "CTRLPF (W)"},
 
-    /* RIOT */
+    /* RIOT RAM */
     {0x280, "SWCHA"},
     {0x281, "SWACNT"},
     {0x282, "SWCHB"},
