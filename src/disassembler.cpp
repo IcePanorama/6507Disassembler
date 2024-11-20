@@ -43,6 +43,10 @@ Disassembler::initialize (const std::string &input_filename,
 void
 Disassembler::create_file_header (const std::string &input_filename)
 {
+  /*
+   *  `std::string` can't be a constexpr, causes CC to complain. Using a
+   *  cstring as an easy fix.
+   */
   constexpr const char *header_format
       = ";  Original filename: {}\n;  Generated {}\n;  Created using "
         "A2600Disassembler <IcePanorama/A2600Disassembler>\n";
@@ -56,6 +60,7 @@ void
 Disassembler::process_file (void)
 {
   const auto &table = InstructionLookupTable::get_table ();
+
   char b;
   while (this->input_fptr.read (&b, sizeof (b)))
     {

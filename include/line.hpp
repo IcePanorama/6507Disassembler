@@ -32,7 +32,7 @@ class Line
   const uint16_t starting_addr_;
   const Instruction &instruction_;
   const std::vector<uint8_t> arguments_;
-  std::optional<AbsoluteAddress> abs_address; // FIXME: needs better name.
+  std::optional<AbsoluteAddress> abs_address;
 
   std::string assembly_instruction;
   std::string comment;
@@ -57,13 +57,10 @@ public:
   Line (const uint16_t starting_addr, const Instruction &instruction,
         const std::vector<uint8_t> arguments);
 
+  std::string to_string (void);
+
   uint16_t get_starting_addr (void) const;
   uint8_t get_instruction_length (void) const;
-  std::string to_string (void);
-  /*
-  const Instruction &get_instruction (void) const;
-  std::optional<AbsoluteAddress> get_absolute_address (void) const;
-  */
 };
 
 #endif /* _LINE_HPP_ */
